@@ -14,12 +14,14 @@ export default forwardRef(function TextInput({ type = 'text', className = '', is
             <input
                 {...props}
                 type={type}
+                {...(type === 'file' ? { value: undefined } : {})}
                 className={
-                    'border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm ' +
+                    'border-gray-300 focus:border-gray-800 focus:ring-gray-800 rounded-md shadow-sm ' +
                     className
                 }
                 ref={input}
             />
+
         </div>
     );
 });
