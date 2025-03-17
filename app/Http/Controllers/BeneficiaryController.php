@@ -6,6 +6,7 @@ use App\Models\Beneficiary;
 use App\Http\Requests\StoreBeneficiaryRequest;
 use App\Http\Requests\UpdateBeneficiaryRequest;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Inertia\Inertia;
 
@@ -19,7 +20,7 @@ class BeneficiaryController extends Controller
     public function index()
     {
         $beneficiary = User::role('Beneficiary')->with('roles')->paginate(10);
-        return Inertia::render('Beneficiary/Index',compact('beneficiary'));
+        return Inertia::render('Beneficiary/Index', compact('beneficiary'));
     }
 
     /**
@@ -29,7 +30,13 @@ class BeneficiaryController extends Controller
      */
     public function create()
     {
-        return Inertia::render('Beneficiary/Create');
+        $beneficiaries = User::role('Beneficiary')->get()->map(function ($beneficiary) {
+            return [
+                'label' => $beneficiary->name,
+                'value' => $beneficiary->id,
+            ];
+        })->toArray();
+        return Inertia::render('Beneficiary/Create', compact('beneficiaries'));
     }
 
     /**
@@ -40,17 +47,66 @@ class BeneficiaryController extends Controller
      */
     public function store(StoreBeneficiaryRequest $request)
     {
-        $user = User::create([
+        $originalUser = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
 
-        $user->assignRole('Beneficiary');
+        if ($request->filled('beneficiary_uid')) {
+            $existingBeneficiaryId = $request->beneficiary_uid;
+            $newBeneficiaryId = $originalUser->id;
+
+            // ✅ Pehle New Beneficiary ko Existing Beneficiary se link karo
+            $this->createFamilyRelation($newBeneficiaryId, $existingBeneficiaryId);
+            $this->createFamilyRelation($existingBeneficiaryId, $newBeneficiaryId);
+
+            // ✅ Ab Existing Beneficiary ke saare relatives nikal lo
+            $relatedBeneficiaries = DB::table('beneficiaryfamily')
+                ->where('user_id', $existingBeneficiaryId)
+                ->orWhere('related_user_id', $existingBeneficiaryId)
+                ->get();
+
+            foreach ($relatedBeneficiaries as $relation) {
+                $relatives = [
+                    $relation->user_id,
+                    $relation->related_user_id
+                ];
+
+                foreach ($relatives as $related) {
+                    if ($related != $newBeneficiaryId && $related != $existingBeneficiaryId) {
+                        // ✅ Naye Beneficiary ko har related beneficiary se jodo
+                        $this->createFamilyRelation($newBeneficiaryId, $related);
+                        $this->createFamilyRelation($related, $newBeneficiaryId);
+                    }
+                }
+            }
+        }
+
+        $originalUser->assignRole('Beneficiary');
+
         return redirect()->route('beneficiarys.index')->with([
-           'message' => 'Beneficiary created successfully!'
+            'message' => 'Beneficiary created successfully!'
         ]);
     }
+
+    /**
+     * ✅ Family Relation Insert Function (Duplicate avoid karega)
+     */
+    private function createFamilyRelation($userId, $relatedUserId)
+    {
+        if (!DB::table('beneficiaryfamily')->where([
+            ['user_id', $userId],
+            ['related_user_id', $relatedUserId]
+        ])->exists()) {
+            DB::table('beneficiaryfamily')->insert([
+                'user_id' => $userId,
+                'related_user_id' => $relatedUserId
+            ]);
+        }
+    }
+
+
 
     /**
      * Display the specified resource.
@@ -88,7 +144,7 @@ class BeneficiaryController extends Controller
             'email' => $request->email,
         ]);
         return redirect()->route('beneficiarys.index')->with([
-           'message' => 'Beneficiary updated successfully!'
+            'message' => 'Beneficiary updated successfully!'
         ]);
     }
 
@@ -102,7 +158,7 @@ class BeneficiaryController extends Controller
     {
         $beneficiary->delete();
         return redirect()->route('beneficiarys.index')->with([
-           'message' => 'Beneficiary deleted successfully!'
+            'message' => 'Beneficiary deleted successfully!'
         ]);
     }
 }

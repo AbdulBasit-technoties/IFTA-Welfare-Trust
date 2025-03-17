@@ -6,11 +6,12 @@ import InputError from "@/Components/InputError";
 import PrimaryButton from "@/Components/PrimaryButton";
 import SelectComponent from "@/Components/SelectComponent";
 import TextArea from "@/Components/TextArea";
-export default function Index({ auth }) {
+export default function Index({ auth, beneficiaries }) {
 
     const { data, setData, post, errors } = useForm({
         name: null,
         email: null,
+        beneficiary_uid: null,
         password: null,
     });
 
@@ -34,7 +35,7 @@ export default function Index({ auth }) {
                         </div>
                     </header>
                     <div className="bg-white rounded-md sm:p-6 p-2 grid grid-cols-12 gap-5 items-center">
-                        <div className="xl:col-span-4 lg:col-span-4 sm:col-span-6 col-span-12">
+                        <div className="lg:col-span-6 col-span-12">
                             <InputLabel htmlFor="name" value="Name" />
                             <TextInput
                                 id="name"
@@ -48,8 +49,18 @@ export default function Index({ auth }) {
                             />
                             <InputError className="mt-2" message={errors.name} />
                         </div>
-
-                        <div className="xl:col-span-4 lg:col-span-4 sm:col-span-6 col-span-12">
+                        <div className="lg:col-span-6 col-span-12">
+                            <InputLabel htmlFor="beneficiary_uid" value="Beneficiary Family" />
+                            <SelectComponent
+                                id="beneficiary_uid"
+                                value={data.beneficiary_uid}
+                                onChange={(e) => setData('beneficiary_uid', e)}
+                                options={beneficiaries}
+                                className="mt-1 block w-full"
+                            />
+                            <InputError className="mt-2" message={errors.beneficiary_uid} />
+                        </div>
+                        <div className="lg:col-span-6 col-span-12">
                             <InputLabel htmlFor="email" value="Email" />
                             <TextInput
                                 id="email"
@@ -64,7 +75,7 @@ export default function Index({ auth }) {
                             <InputError className="mt-2" message={errors.email} />
                         </div>
 
-                        <div className="xl:col-span-4 lg:col-span-4 sm:col-span-6 col-span-12">
+                        <div className="lg:col-span-6 col-span-12">
                             <InputLabel htmlFor="password" value="Password" />
                             <TextInput
                                 id="password"
