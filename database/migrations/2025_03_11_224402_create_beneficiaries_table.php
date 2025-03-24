@@ -19,12 +19,13 @@ return new class extends Migration
             $table->string('guardian_name')->nullable();
             $table->string('beneficiary_cnic', 15);
             $table->string('guardian_cnic', 15)->nullable();
-            $table->unique(['beneficiary_cnic', 'type'], 'beneficiary_cnic_unique');
-            $table->unique(['guardian_cnic', 'type'], 'guardian_cnic_unique');
-            $table->text('address');
-            $table->string('beneficiary_contact_no');
+            $table->unique(['beneficiary_cnic', 'pid', 'uid'], 'beneficiary_cnic_unique');
+            $table->unique(['guardian_cnic', 'pid', 'uid'], 'guardian_cnic_unique');
+            $table->text('address')->nullable();
+            $table->string('beneficiary_contact_no')->nullable();
             $table->string('guardian_contact_no')->nullable();
-            $table->string('email')->nullable();
+            $table->string('email');
+            $table->unique(['email', 'uid', 'pid'], 'unique_email_uid_pid');
             $table->string('photo_attached')->nullable();
             $table->string('occupation')->nullable();
             $table->decimal('household_income', 10, 2)->nullable();
@@ -37,12 +38,8 @@ return new class extends Migration
             $table->enum('gender', ['Male', 'Female', 'Other'])->nullable();
             $table->text('description')->nullable();
             $table->text('disability')->nullable();
-
-            $table->enum('education_level', ['Junior', 'Primary', 'Secondary', 'Intermediate', 'Graduate', 'Postgraduate'])->nullable();
-            $table->enum('patient_type', ['OPD', 'IPD', 'Surgery', 'Other'])->nullable();
             $table->string('institute_name')->nullable();
             $table->string('class')->nullable();
-            $table->string('last_result')->nullable();
             $table->decimal('total_fee', 10, 2)->nullable();
             $table->decimal('approved_amount', 10, 2)->nullable();
             $table->string('institute_ntn')->nullable();
@@ -50,11 +47,8 @@ return new class extends Migration
             $table->string('dr_name')->nullable();
             $table->text('diseases_injury')->nullable();
             $table->date('last_checkup_date')->nullable();
-            $table->year('graduation_year')->nullable();
             $table->string('degree_title')->nullable();
-            $table->string('course_field')->nullable();
             $table->integer('semester')->nullable();
-            $table->integer('total_semesters')->nullable();
 
             $table->string('spouse_education')->nullable();
             $table->integer('spouse_age')->nullable();
@@ -83,11 +77,12 @@ return new class extends Migration
             $table->boolean('prescription')->default(false);
             $table->boolean('last_utility_bill')->default(false);
             $table->boolean('marriage_invitation')->default(false);
-
-            // Additional Info
+            $table->foreignId('pid')->nullable()->constrained('programs')->nullOnDelete();
             $table->string('uid')->nullable();
-            $table->enum('type', ['School Fees', 'Patient Welfare', 'Monthly Ration', 'Marriage Support', 'Higher Education'])->nullable();
+            $table->enum('education_type', ['school', 'college', 'university', 'course', 'postgraduate'])->nullable();
+            $table->enum('fees_time', ['1_month', '6_month', 'yearly']);
             $table->foreignId('institute_id')->nullable()->constrained('institutions')->nullOnDelete();
+            $table->enum('status', ['Request', 'Pending Approval', 'Approved', 'Cancelled'])->default('Request');
             $table->timestamps();
         });
     }

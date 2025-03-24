@@ -1,19 +1,16 @@
 <?php
 
-use App\Http\Controllers\BeneficiaryController;
-use App\Http\Controllers\BeneficiaryHigherEducationController;
-use App\Http\Controllers\BeneficiaryMarriageController;
-use App\Http\Controllers\BeneficiaryPatientController;
-use App\Http\Controllers\BeneficiaryRationController;
-use App\Http\Controllers\BeneficiarySchoolController;
-use App\Http\Controllers\DonorController;
+use App\Http\Controllers\BeneficiarysApplicationsController;
 use App\Http\Controllers\InstitutionController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ProgramController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\UserController;
+use App\Models\Program;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
-
+use Illuminate\Support\Facades\Schema;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -40,18 +37,14 @@ Route::get('/dashboard', function () {
 
 Route::middleware('auth')->group(function () {
     Route::resource('roles', RoleController::class);
-    Route::resource('beneficiarys-schools', BeneficiarySchoolController::class);
-    Route::resource('beneficiarys-patients', BeneficiaryPatientController::class);
-    Route::resource('beneficiarys-rations', BeneficiaryRationController::class);
-    Route::resource('beneficiarys-marriages', BeneficiaryMarriageController::class);
-    Route::resource('beneficiarys-educations', BeneficiaryHigherEducationController::class);
-    Route::resource('beneficiarys', BeneficiaryController::class);
-    Route::resource('donors', DonorController::class);
+    Route::resource('programs', ProgramController::class);
+    Route::resource('users', UserController::class);
     Route::resource('institutions', InstitutionController::class);
-    
+    Route::resource('beneficiarys-applications', BeneficiarysApplicationsController::class);
+
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

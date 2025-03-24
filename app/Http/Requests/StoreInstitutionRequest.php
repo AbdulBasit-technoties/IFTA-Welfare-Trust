@@ -29,6 +29,8 @@ class StoreInstitutionRequest extends FormRequest
             'email'      => ['nullable', 'email', 'max:255', 'unique:institutions,email'],
             'contact_no' => ['nullable', 'string', 'max:20'],
             'url'        => ['nullable', 'url', 'max:255'],
+            'type'       => ['required', 'in:school,college,university,course,postgraduate'],
+            'fees_time'  => ['required', 'in:1_month,6_month,yearly'],
         ];
     }
 }

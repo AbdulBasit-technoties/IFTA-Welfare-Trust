@@ -20,6 +20,8 @@ return new class extends Migration
             $table->string('email')->nullable()->unique();
             $table->string('contact_no', 20);
             $table->string('url', 255)->nullable();
+            $table->enum('type', ['school', 'college', 'university','course', 'postgraduate']);
+            $table->enum('fees_time', ['1_month', '6_month', 'yearly']);
             $table->timestamps();
         });
     }

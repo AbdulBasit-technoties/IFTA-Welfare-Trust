@@ -23,7 +23,7 @@ export default function Index({ auth, role }) {
 
       <section className="py-24 px-10">
         <form onSubmit={submit} className="mt-6" encType="multipart/form-data">
-          <header className="p-3 flex justify-between items-center bg-gray-800 rounded-tl-2xl rounded-tr-2xl text-white">
+          <header className="p-3 flex justify-between items-center bg-primary rounded-tl-2xl rounded-tr-2xl text-white">
             <div>
               <h2 className="sm:text-lg text-xs font-medium">Edit Role</h2>
               <p className="mt-1 sm:text-sm text-xs">
@@ -50,7 +50,7 @@ export default function Index({ auth, role }) {
             <div className="col-span-12 items-center gap-4">
               <Link
                 href={route('roles.index')}
-                className="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-2xl text-xs text-white capitalize tracking-widest hover:border-gray-700 hover:bg-transparent hover:text-gray-800 transition-all duration-500"
+                className="inline-flex items-center px-4 py-2 bg-primary border border-transparent rounded-2xl text-xs text-white capitalize tracking-widest hover:border-primary hover:bg-transparent hover:text-primary transition-all duration-500"
               >
                 Cancel
               </Link>

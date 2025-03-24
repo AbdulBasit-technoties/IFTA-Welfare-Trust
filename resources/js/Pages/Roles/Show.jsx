@@ -31,7 +31,7 @@ function View(props) {
                 header={
                     <>
                         <div className='flex flex-col px-4 '>
-                            <h2 className="font-semibold text-xl text-gray-800 leading-tight">Role:
+                            <h2 className="font-semibold text-xl text-primary leading-tight">Role:
                                 {role.name}</h2>
                         </div>
                     </>
@@ -39,7 +39,7 @@ function View(props) {
             >
                 <Head title="Admin Dashboard" />
                 <div className="flex flex-col py-24 px-10">
-                    <div className="col-span-4 bg-gray-800 p-4 text-white rounded-2xl flex justify-between items-center">
+                    <div className="col-span-4 bg-primary p-4 text-white rounded-2xl flex justify-between items-center">
                         <div className="">
                             <h3 className="text-lg font-medium">Manage Permissions for {role.name}</h3>
                             <label className="flex items-center mt-2 bg-white rounded-md py-2 pl-3">
@@ -50,13 +50,13 @@ function View(props) {
                                         setSelectedPermissions(e.target.checked ? permissionsList : []);
                                     }}
                                 />
-                                <span className="ml-2 text-gray-800">Select All</span>
+                                <span className="ml-2 text-primary">Select All</span>
                             </label>
                         </div>
 
                         <button
                             onClick={handleSave}
-                            className="inline-flex hover:bg-gray-800 hover:text-white hover:border-white transition-all duration-500 items-center px-4 py-2 bg-white border border-transparent rounded-md font-semibold text-xs text-gray-800 uppercase tracking-widest"
+                            className="inline-flex hover:bg-primary hover:text-white hover:border-white transition-all duration-500 items-center px-4 py-2 bg-white border border-transparent rounded-md font-semibold text-xs text-primary uppercase tracking-widest"
                         >
                             Save
                         </button>
@@ -66,7 +66,7 @@ function View(props) {
                     <div className="py-6 gap-4 grid xl:grid-cols-3 lg:grid-cols-3 grid-cols-2">
 
                         {Object.entries(groupedPermissions).map(([item, actions]) => (
-                            <div key={item} className="bg-gray-800 text-white dark:bg-white dark:text-gray-800 p-6 rounded-2xl shadow-lg">
+                            <div key={item} className="bg-primary text-white dark:bg-white dark:text-primary p-6 rounded-2xl shadow-lg">
                                 <h4 className="font-semibold capitalize flex items-center gap-2 mb-2">
                                     <input
                                         type="checkbox"

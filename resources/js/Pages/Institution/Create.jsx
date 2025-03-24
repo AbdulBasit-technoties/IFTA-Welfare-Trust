@@ -6,7 +6,7 @@ import InputError from "@/Components/InputError";
 import PrimaryButton from "@/Components/PrimaryButton";
 import SelectComponent from "@/Components/SelectComponent";
 import TextArea from "@/Components/TextArea";
-export default function Index({ auth }) {
+export default function Index({ auth,TypeOptions,FeesTime }) {
 
     const { data, setData, post, errors } = useForm({
         name: null,
@@ -14,6 +14,8 @@ export default function Index({ auth }) {
         contact_no: null,
         address: null,
         url: null,
+        type: null,
+        fees_time: null,
     });
 
 
@@ -28,7 +30,7 @@ export default function Index({ auth }) {
 
             <section className="py-24 px-10">
                 <form onSubmit={submit} className="mt-6" encType="multipart/form-data">
-                    <header className="p-3 flex justify-between items-center bg-gray-800 rounded-tl-2xl rounded-tr-2xl text-white">
+                    <header className="p-3 flex justify-between items-center bg-primary rounded-tl-2xl rounded-tr-2xl text-white">
                         <div>
                             <h2 className="sm:text-lg text-xs font-medium">Add Institution</h2>
                             <p className="mt-1 sm:text-sm text-xs">
@@ -37,6 +39,29 @@ export default function Index({ auth }) {
                         </div>
                     </header>
                     <div className="bg-white rounded-md sm:p-6 p-2 grid grid-cols-12 gap-5 items-center">
+                        <div className="xl:col-span-6 lg:col-span-4 sm:col-span-6 col-span-12">
+                            <InputLabel htmlFor="type" value="Education Type" />
+                            <SelectComponent
+                                id="type"
+                                value={data.type}
+                                onChange={(e) => setData('type', e)}
+                                options={TypeOptions}
+                                className="mt-1 block w-full"
+                            />
+                            <InputError className="mt-2" message={errors.type} />
+                        </div>
+
+                        <div className="xl:col-span-6 lg:col-span-4 sm:col-span-6 col-span-12">
+                            <InputLabel htmlFor="fees_time" value="Fees Time" />
+                            <SelectComponent
+                                id="fees_time"
+                                value={data.fees_time}
+                                onChange={(e) => setData('fees_time', e)}
+                                options={FeesTime}
+                                className="mt-1 block w-full"
+                            />
+                            <InputError className="mt-2" message={errors.fees_time} />
+                        </div>
                         <div className="xl:col-span-6 lg:col-span-4 sm:col-span-6 col-span-12">
                             <InputLabel htmlFor="name" value="Name" />
                             <TextInput
@@ -109,7 +134,7 @@ export default function Index({ auth }) {
                             <PrimaryButton>Add Institution</PrimaryButton>
                             <Link
                                 href={route('institutions.index')}
-                                className="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-2xl text-xs text-white capitalize tracking-widest hover:border-gray-700 hover:bg-transparent hover:text-gray-800 transition-all duration-500"
+                                className="inline-flex items-center px-4 py-2 bg-primary border border-transparent rounded-2xl text-xs text-white capitalize tracking-widest hover:border-primary hover:bg-transparent hover:text-primary transition-all duration-500"
                             >
                                 Cancel
                             </Link>

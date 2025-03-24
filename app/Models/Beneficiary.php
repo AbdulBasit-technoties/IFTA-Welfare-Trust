@@ -31,18 +31,14 @@ class Beneficiary extends Model
         'disability',
 
         // Education Fields
-        'education_level',
-        'patient_type',
         'class',
-        'last_result',
+        'fees_time',
         'total_fee',
         'approved_amount',
         'institute_ntn',
-        'graduation_year',
         'degree_title',
-        'course_field',
         'semester',
-        'total_semesters',
+        'education_type',
 
         // Medical Fields
         'hospital_name',
@@ -85,10 +81,11 @@ class Beneficiary extends Model
 
         // Additional Info
         'uid',
-        'type',
-        'institute_id'
+        'pid',
+        'institute_id',
+        'status'
     ];
-    public function beneficiary()
+    public function user()
     {
         return $this->belongsTo(User::class, 'uid');
     }
@@ -97,8 +94,12 @@ class Beneficiary extends Model
     {
         return $this->belongsTo(User::class, 'did');
     }
-    public function institution()
+    public function institute()
     {
-        return $this->belongsTo(Institution::class);
+        return $this->belongsTo(Institution::class, 'institute_id');
+    }
+    public function program()
+    {
+        return $this->belongsTo(Program::class, 'pid');
     }
 }

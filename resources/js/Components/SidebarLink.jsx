@@ -5,8 +5,8 @@ export default function SidebarLink({ active = false, className = '', children, 
         <Link
             {...props}
             className={
-                `flex items-center justify-between p-2 text-gray-900 transition-all duration-500 rounded-lg hover:bg-gray-500 hover:dark:bg-gray-800 group ` +
-                (active ? 'bg-gray-500 dark:bg-gray-800' : '') +
+                `flex items-center justify-between p-2 text-primary transition-all duration-500 rounded-lg hover:dark:bg-accent hover:bg-primary group ` +
+                (active ? 'dark:bg-accent bg-primary' : '') +
                 className
             }
         >

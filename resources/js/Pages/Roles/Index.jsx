@@ -29,13 +29,13 @@ export default function Index({ auth, role }) {
     <AuthenticatedLayout auth={auth}>
       <Head title="Roles" />
       <div className="px-10 py-20">
-        <div className="flex font-semibold items-center leading-tight text-gray-800 text-xl justify-between mb-4 md:px-4">
+        <div className="flex font-semibold items-center leading-tight text-primary text-xl justify-between mb-4 md:px-4">
           <h2>Roles</h2>
-          <div className="text-gray-800 md:text-sm text-xs">
+          <div className="text-primary md:text-sm text-xs">
             Per page {role.total}/{role.to || role.length}
             <Link
               href={route('roles.create')}
-              className="inline-flex items-center ml-2 px-4 py-2 bg-gray-800 border border-transparent rounded-2xl text-xs text-white uppercase tracking-widest hover:border-gray-700 hover:bg-transparent hover:text-gray-800 transition-all duration-500"
+              className="inline-flex items-center ml-2 px-4 py-2 bg-primary border border-transparent rounded-2xl text-xs text-white uppercase tracking-widest hover:border-primary hover:bg-transparent hover:text-primary transition-all duration-500"
             >
               Add Role
             </Link>
@@ -43,7 +43,7 @@ export default function Index({ auth, role }) {
         </div>
         <div className="rounded-xl overflow-x-auto">
           <table className="table table-xs w-full table-main">
-            <thead className="bg-gray-800 text-white">
+            <thead className="bg-primary text-white">
               <tr>
                 <th>#</th>
                 <th>Name</th>
@@ -57,13 +57,13 @@ export default function Index({ auth, role }) {
                   <td className="text-sm">{item.name}</td>
                   <td className="text-sm">
                     <div className="flex gap-2">
-                      <Link href={route('roles.edit', item.id)} className="bg-gray-800 p-3 rounded-full text-white">
+                      <Link href={route('roles.edit', item.id)} className="text-primary text-2xl">
                         <FaEdit />
                       </Link>
-                      <Link href={route('roles.show', item.id)} className="bg-gray-800 p-3 rounded-full text-white">
+                      <Link href={route('roles.show', item.id)} className="text-primary text-2xl">
                         <FaEye />
                       </Link>
-                      <button onClick={() => handleDelete(item.id)} className="bg-gray-800 p-3 rounded-full text-white">
+                      <button onClick={() => handleDelete(item.id)} className="text-primary text-2xl">
                         <MdDelete />
                       </button>
                     </div>
@@ -78,7 +78,7 @@ export default function Index({ auth, role }) {
             <Link href={role.prev_page_url || "#"} className={`join-item btn ${role.prev_page_url ? "" : "btn-disabled"}`}>
               «
             </Link>
-            <button className="join-item btn cursor-default bg-gray-800 text-white">
+            <button className="join-item btn cursor-default bg-primary text-white">
               Page {role.current_page}
             </button>
             <Link href={role.next_page_url || "#"} className={`join-item btn ${role.next_page_url ? "" : "btn-disabled"}`}>

@@ -27,7 +27,19 @@ class InstitutionController extends Controller
      */
     public function create()
     {
-        return Inertia::render('Institution/Create');
+        $FeesTime = [
+            ["label" => "1 Month", "value" => "1_month"],
+            ["label" => "6 Months", "value" => "6_month"],
+            ["label" => "Yearly", "value" => "yearly"],
+        ];
+        $TypeOptions = [
+            ["label" => "School", "value" => "school"],
+            ["label" => "College", "value" => "college"],
+            ["label" => "University", "value" => "university"],
+            ["label" => "Course", "value" => "course"],
+            ["label" => "Postgraduate", "value" => "postgraduate"],
+        ];
+        return Inertia::render('Institution/Create',compact('FeesTime','TypeOptions'));
     }
 
     /**
@@ -40,7 +52,7 @@ class InstitutionController extends Controller
     {
         Institution::create($request->all());
         return redirect()->route('institutions.index')->with([
-           'message' => 'Institution created successfully!'
+            'message' => 'Institution created successfully!'
         ]);
     }
 
@@ -63,7 +75,19 @@ class InstitutionController extends Controller
      */
     public function edit(Institution $institution)
     {
-        return Inertia::render('Institution/Edit', compact('institution'));
+        $FeesTime = [
+            ["label" => "1 Month", "value" => "1_month"],
+            ["label" => "6 Months", "value" => "6_month"],
+            ["label" => "Yearly", "value" => "yearly"],
+        ];
+        $TypeOptions = [
+            ["label" => "School", "value" => "school"],
+            ["label" => "College", "value" => "college"],
+            ["label" => "University", "value" => "university"],
+            ["label" => "Course", "value" => "course"],
+            ["label" => "Postgraduate", "value" => "postgraduate"],
+        ];
+        return Inertia::render('Institution/Edit', compact('institution','FeesTime','TypeOptions'));
     }
 
     /**
@@ -77,7 +101,7 @@ class InstitutionController extends Controller
     {
         $institution->update($request->all());
         return redirect()->route('institutions.index')->with([
-           'message' => 'Institution updated successfully!'
+            'message' => 'Institution updated successfully!'
         ]);
     }
 
@@ -91,7 +115,7 @@ class InstitutionController extends Controller
     {
         $institution->delete();
         return redirect()->route('institutions.index')->with([
-           'message' => 'Institution deleted successfully!'
+            'message' => 'Institution deleted successfully!'
         ]);
     }
 }

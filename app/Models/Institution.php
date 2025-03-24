@@ -14,9 +14,11 @@ class Institution extends Model
         'email',
         'contact_no',
         'url',
+        'type',
+        'fees_time'
     ];
     public function beneficiaries()
     {
-        return $this->hasMany(Beneficiary::class);
+        return $this->hasMany(Beneficiary::class, 'institute_id');
     }
 }

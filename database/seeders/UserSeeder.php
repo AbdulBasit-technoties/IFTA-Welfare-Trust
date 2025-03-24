@@ -25,30 +25,22 @@ class UserSeeder extends Seeder
             Permission::firstOrCreate(['name' => "$model.destroy"]);
         }
 
-        $superAdminRole = Role::firstOrCreate(['name' => 'Super Admin']);
+        $AdminRole = Role::firstOrCreate(['name' => 'Admin']);
         $permissions = Permission::all();
-        $superAdminRole->syncPermissions($permissions);
-
-        $adminRole = $this->createRoleWithPermissions('Admin', []);
+        $AdminRole->syncPermissions($permissions);
         $donorRole = $this->createRoleWithPermissions('Donor', []);
         $beneficiaryRole = $this->createRoleWithPermissions('Beneficiary', []);
         $accountantRole = $this->createRoleWithPermissions('Accountant', []);
+        $hrRole = $this->createRoleWithPermissions('HR', []);
+        $educationOfficerRole = $this->createRoleWithPermissions('Education Officer', []);
 
-        $superAdmin = User::firstOrCreate([
-            'email' => 'superadmin@technoties.com',
-        ], [
-            'name' => 'Super Admin',
-            'password' => Hash::make('password'),
-        ]);
-        $superAdmin->assignRole($superAdminRole);
-
-        $adminUser = User::firstOrCreate([
+        $Admin = User::firstOrCreate([
             'email' => 'admin@technoties.com',
         ], [
             'name' => 'Admin',
             'password' => Hash::make('password'),
         ]);
-        $adminUser->assignRole($adminRole);
+        $Admin->assignRole($AdminRole);
 
         $donorUser = User::firstOrCreate([
             'email' => 'donor@technoties.com',
@@ -56,13 +48,13 @@ class UserSeeder extends Seeder
             'name' => 'Donor',
             'password' => Hash::make('password'),
         ]);
-        
+
         $donorUser->assignRole($donorRole);
-        
+
         Donor::firstOrCreate([
             'email' => $donorUser->email,
         ], [
-            'full_name' => $donorUser->name,
+            'name' => $donorUser->name,
             'uid' => $donorUser->id,
         ]);
 
@@ -81,11 +73,28 @@ class UserSeeder extends Seeder
             'password' => Hash::make('password'),
         ]);
         $accountantUser->assignRole($accountantRole);
+
+        $hrUser = User::firstOrCreate([
+            'email' => 'hr@technoties.com',
+        ], [
+            'name' => 'HR',
+            'password' => Hash::make('password'),
+        ]);
+        $hrUser->assignRole($hrRole);
+
+        // Education Officer User
+        $educationOfficerUser = User::firstOrCreate([
+            'email' => 'educationofficer@technoties.com',
+        ], [
+            'name' => 'Education Officer',
+            'password' => Hash::make('password'),
+        ]);
+        $educationOfficerUser->assignRole($educationOfficerRole);
     }
 
     /**
      * Helper function to create roles and assign permissions accordingly.
-         */
+     */
     protected function createRoleWithPermissions($roleName, array $permissions)
     {
         $role = Role::firstOrCreate(['name' => $roleName]);

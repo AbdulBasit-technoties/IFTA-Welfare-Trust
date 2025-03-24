@@ -2,14 +2,11 @@
 
 return [
     'models' => [
+        'roles',
         'profile',
-        'beneficiarys-schools',
-        'beneficiarys-patients',
-        'beneficiarys-rations',
-        'beneficiarys-marriages',
-        'beneficiarys-educations',
-        'beneficiarys',
+        'users',
         'institutions',
-        'donors',
+        'beneficiarys-applications',
+        'programs',
     ],
 ];

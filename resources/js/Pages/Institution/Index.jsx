@@ -29,13 +29,13 @@ export default function Index({ auth, institution }) {
     <AuthenticatedLayout auth={auth}>
       <Head title="Institution" />
       <div className="px-10 py-20">
-        <div className="flex sm:flex-row flex-col gap-3 sm:gap-0   font-semibold sm:items-center leading-tight text-gray-800 text-xl sm:justify-between mb-4 md:px-4">
+        <div className="flex sm:flex-row flex-col gap-3 sm:gap-0   font-semibold sm:items-center leading-tight text-primary text-xl sm:justify-between mb-4 md:px-4">
           <h2>Institution</h2>
-          <div className="text-gray-800 md:text-sm text-xs">
+          <div className="text-primary md:text-sm text-xs">
             Per page {institution.total}/{institution.to || institution.length}
             <Link
               href={route('institutions.create')}
-              className="inline-flex items-center ml-2 px-4 py-2 bg-gray-800 border border-transparent rounded-2xl text-xs text-white uppercase tracking-widest hover:border-gray-700 hover:bg-transparent hover:text-gray-800 transition-all duration-500"
+              className="inline-flex items-center ml-2 px-4 py-2 bg-primary border border-transparent rounded-2xl text-xs text-white uppercase tracking-widest hover:border-primary hover:bg-transparent hover:text-primary transition-all duration-500"
             >
               Add Institution
             </Link>
@@ -43,7 +43,7 @@ export default function Index({ auth, institution }) {
         </div>
         <div className="rounded-xl overflow-x-auto">
           <table className="table table-xs w-full table-main">
-            <thead className="bg-gray-800 text-white">
+            <thead className="bg-primary text-white">
               <tr>
                 <th>#</th>
                 <th>Name</th>
@@ -63,13 +63,13 @@ export default function Index({ auth, institution }) {
                   <td className="text-sm">{item.address ?? 'N/A'}</td>
                   <td className="text-sm">
                     <div className="flex gap-2">
-                      <Link href={route('institutions.edit', item.id)} className="bg-gray-800 p-3 rounded-full text-white">
+                      <Link href={route('institutions.edit', item.id)} className="text-primary text-2xl">
                         <FaEdit />
                       </Link>
-                      <Link href={route('institutions.show', item.id)} className="bg-gray-800 p-3 rounded-full text-white">
+                      <Link href={route('institutions.show', item.id)} className="text-primary text-2xl">
                         <FaEye />
                       </Link>
-                      <button onClick={() => handleDelete(item.id)} className="bg-gray-800 p-3 rounded-full text-white">
+                      <button onClick={() => handleDelete(item.id)} className="text-primary text-2xl">
                         <MdDelete />
                       </button>
                     </div>
@@ -84,7 +84,7 @@ export default function Index({ auth, institution }) {
             <Link href={institution.prev_page_url || "#"} className={`join-item btn ${institution.prev_page_url ? "" : "btn-disabled"}`}>
               «
             </Link>
-            <button className="join-item btn cursor-default bg-gray-800 text-white">
+            <button className="join-item btn cursor-default bg-primary text-white">
               Page {institution.current_page}
             </button>
             <Link href={institution.next_page_url || "#"} className={`join-item btn ${institution.next_page_url ? "" : "btn-disabled"}`}>

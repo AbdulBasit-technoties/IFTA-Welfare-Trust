@@ -10,13 +10,9 @@ class Donor extends Model
     use HasFactory;
 
     protected $fillable = [
-        'full_name',
+        'name',
         'email',
         'phone',
-        'donation_amount',
-        'payment_method',
-        'donation_frequency',
-        'identification_document',
         'uid',
         'address',
     ];

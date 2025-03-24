@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
+use Spatie\Permission\Models\Role;
 
 class User extends Authenticatable
 {
@@ -42,6 +43,7 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
     public function donor()
     {
         return $this->hasOne(Donor::class, 'uid');
@@ -54,5 +56,34 @@ class User extends Authenticatable
     public function donatedBeneficiaries()
     {
         return $this->hasMany(Beneficiary::class, 'did');
+    }
+    public function getBeneficiaries()
+    {
+        if ($this->hasRole('Beneficiary')) {
+            return Beneficiary::where('uid', $this->id);
+        } elseif ($this->hasRole('Donor')) {
+            return Beneficiary::where('did', $this->id);
+        } else {
+            return Beneficiary::query();
+        }
+    }
+
+    public function accountant()
+    {
+        return $this->hasOne(Accountant::class, 'uid');
+    }
+
+    public function hr()
+    {
+        return $this->hasOne(Hr::class, 'uid');
+    }
+
+    public function beneficiary()
+    {
+        return $this->hasOne(Beneficiary::class, 'uid');
+    }
+    public function educationOfficer()
+    {
+        return $this->hasOne(EducationOfficer::class, 'uid');
     }
 }
