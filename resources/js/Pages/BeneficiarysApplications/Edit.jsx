@@ -147,16 +147,16 @@ export default function Index({ auth, beneficiary, donors, TypeOptions, FeesTime
     const handleInstituteChange = (e) => {
         const selectedId = e;
         const selectedInstitute = institutions.find(inst => inst.value == selectedId);
-    
+
         setData((prevData) => ({
             ...prevData,
             institute_id: selectedId,
             institute_ntn: selectedInstitute?.contact_no || '',
-            fees_time: selectedInstitute?.fees_time || prevData.fees_time, 
-            education_type: selectedInstitute?.education_type || prevData.education_type 
+            fees_time: selectedInstitute?.fees_time || prevData.fees_time,
+            education_type: selectedInstitute?.education_type || prevData.education_type
         }));
     };
-    
+
     const feesTimeOptions = {
         "1_month": "1 Month",
         "6_month": "6 Months",
@@ -292,19 +292,6 @@ export default function Index({ auth, beneficiary, donors, TypeOptions, FeesTime
                                     <InputError className="mt-2" message={errors.guardian_contact_no} />
                                 </div>
                                 <div className="xl:col-span-3 lg:col-span-4 sm:col-span-6 col-span-12">
-                                    <InputLabel htmlFor="photo_attached" value="Photo Attached" />
-                                    <TextInput
-                                        id="photo_attached"
-                                        className="mt-1 block w-full"
-                                        value={data.photo_attached || ''}
-                                        onChange={(e) => setData('photo_attached', e.target.files[0])}
-                                        isFocused
-                                        autoComplete="photo_attached"
-                                        type="file"
-                                    />
-                                    <InputError className="mt-2" message={errors.occupation} />
-                                </div>
-                                <div className="xl:col-span-3 lg:col-span-4 sm:col-span-6 col-span-12">
                                     <InputLabel htmlFor="occupation" value="Occupation" />
                                     <TextInput
                                         id="occupation"
@@ -357,89 +344,87 @@ export default function Index({ auth, beneficiary, donors, TypeOptions, FeesTime
                                     />
                                     <InputError className="mt-2" message={errors.household_income} />
                                 </div>
-                                <div className="col-span-12 grid xl:grid-cols-5 lg:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-5">
-                                    <div className="">
-                                        <InputLabel htmlFor="family_members" value="Number of Family Members" />
-                                        <TextInput
-                                            id="family_members"
-                                            className="mt-1 block w-full"
-                                            value={data.family_members || ''}
-                                            onChange={(e) => setData('family_members', e.target.value)}
-                                            required
-                                            autoComplete="family_members"
-                                            type="number"
-                                        />
-                                        <InputError className="mt-2" message={errors.family_members} />
-                                    </div>
-                                    <div className="">
-                                        <InputLabel htmlFor="marital_status" value="Marital Status" />
-                                        <SelectComponent
-                                            id="marital_status"
-                                            value={data.marital_status}
-                                            onChange={(e) => setData('marital_status', e)}
-                                            options={MaritalStatus}
-                                            className="mt-1 block w-full"
-                                        />
-                                        <InputError className="mt-2" message={errors.marital_status} />
-                                    </div>
-                                    <div className="">
-                                        <InputLabel htmlFor="gender" value="Gender" />
-                                        <SelectComponent
-                                            id="gender"
-                                            value={data.gender}
-                                            onChange={(e) => setData('gender', e)}
-                                            options={patientGender}
-                                            className="mt-1 block w-full"
-                                        />
-                                        <InputError className="mt-2" message={errors.gender} />
-                                    </div>
-                                    <div className="flex xl:justify-center items-center gap-3">
-                                        <InputLabel htmlFor="syed" value="Syed" />
+                                <div className="xl:col-span-3 lg:col-span-4 sm:col-span-6 col-span-12">
+                                    <InputLabel htmlFor="family_members" value="Number of Family Members" />
+                                    <TextInput
+                                        id="family_members"
+                                        className="mt-1 block w-full"
+                                        value={data.family_members || ''}
+                                        onChange={(e) => setData('family_members', e.target.value)}
+                                        required
+                                        autoComplete="family_members"
+                                        type="number"
+                                    />
+                                    <InputError className="mt-2" message={errors.family_members} />
+                                </div>
+                                <div className="xl:col-span-3 lg:col-span-4 sm:col-span-6 col-span-12">
+                                    <InputLabel htmlFor="marital_status" value="Marital Status" />
+                                    <SelectComponent
+                                        id="marital_status"
+                                        value={data.marital_status}
+                                        onChange={(e) => setData('marital_status', e)}
+                                        options={MaritalStatus}
+                                        className="mt-1 block w-full"
+                                    />
+                                    <InputError className="mt-2" message={errors.marital_status} />
+                                </div>
+                                <div className="xl:col-span-3 lg:col-span-4 sm:col-span-6 col-span-12">
+                                    <InputLabel htmlFor="gender" value="Gender" />
+                                    <SelectComponent
+                                        id="gender"
+                                        value={data.gender}
+                                        onChange={(e) => setData('gender', e)}
+                                        options={patientGender}
+                                        className="mt-1 block w-full"
+                                    />
+                                    <InputError className="mt-2" message={errors.gender} />
+                                </div>
+                                <div className="xl:col-span-3 lg:col-span-4 sm:col-span-6 col-span-12 flex xl:justify-center items-center gap-3">
+                                    <InputLabel htmlFor="syed" value="Syed" />
 
-                                        <input
-                                            type="radio"
-                                            id="syed_yes"
-                                            name="syed"
-                                            value="true"
-                                            checked={data.syed === true}
-                                            onChange={() => setData('syed', true)}
-                                        />
-                                        <InputLabel htmlFor="syed_yes" value="Yes" />
+                                    <input
+                                        type="radio"
+                                        id="syed_yes"
+                                        name="syed"
+                                        value="true"
+                                        checked={data.syed === true}
+                                        onChange={() => setData('syed', true)}
+                                    />
+                                    <InputLabel htmlFor="syed_yes" value="Yes" />
 
-                                        <input
-                                            type="radio"
-                                            id="syed_no"
-                                            name="syed"
-                                            value="false"
-                                            checked={data.syed === false}
-                                            onChange={() => setData('syed', false)}
-                                        />
-                                        <InputLabel htmlFor="syed_no" value="No" />
-                                    </div>
+                                    <input
+                                        type="radio"
+                                        id="syed_no"
+                                        name="syed"
+                                        value="false"
+                                        checked={data.syed === false}
+                                        onChange={() => setData('syed', false)}
+                                    />
+                                    <InputLabel htmlFor="syed_no" value="No" />
+                                </div>
 
-                                    <div className="flex xl:justify-center items-center gap-3">
-                                        <InputLabel htmlFor="orphan" value="Orphan" />
+                                <div className="xl:col-span-3 lg:col-span-4 sm:col-span-6 col-span-12 flex xl:justify-center items-center gap-3">
+                                    <InputLabel htmlFor="orphan" value="Orphan" />
 
-                                        <input
-                                            type="radio"
-                                            id="orphan_yes"
-                                            name="orphan"
-                                            value="true"
-                                            checked={data.orphan === true}
-                                            onChange={() => setData('orphan', true)}
-                                        />
-                                        <InputLabel htmlFor="orphan_yes" value="Yes" />
+                                    <input
+                                        type="radio"
+                                        id="orphan_yes"
+                                        name="orphan"
+                                        value="true"
+                                        checked={data.orphan === true}
+                                        onChange={() => setData('orphan', true)}
+                                    />
+                                    <InputLabel htmlFor="orphan_yes" value="Yes" />
 
-                                        <input
-                                            type="radio"
-                                            id="orphan_no"
-                                            name="orphan"
-                                            value="false"
-                                            checked={data.orphan === false}
-                                            onChange={() => setData('orphan', false)}
-                                        />
-                                        <InputLabel htmlFor="orphan_no" value="No" />
-                                    </div>
+                                    <input
+                                        type="radio"
+                                        id="orphan_no"
+                                        name="orphan"
+                                        value="false"
+                                        checked={data.orphan === false}
+                                        onChange={() => setData('orphan', false)}
+                                    />
+                                    <InputLabel htmlFor="orphan_no" value="No" />
                                 </div>
 
                                 <div className="xl:col-span-4 col-span-12">
@@ -619,7 +604,7 @@ export default function Index({ auth, beneficiary, donors, TypeOptions, FeesTime
                                         <InputError className="mt-2" message={errors.institute_ntn} />
                                     </div>
                                 )}
-                                {(programSlug === 'schools' && 
+                                {(programSlug === 'schools' &&
                                     <div className="xl:col-span-4 sm:col-span-6 col-span-12">
                                         <InputLabel htmlFor="class" value="Class" />
                                         <TextInput
@@ -1219,7 +1204,7 @@ export default function Index({ auth, beneficiary, donors, TypeOptions, FeesTime
                                     </div>
                                 )}
                                 <div className="flex items-center col-span-12 gap-2 sm:gap-4">
-                                    <PrimaryButton>Add Beneficiary</PrimaryButton>
+                                    <PrimaryButton>Update Beneficiary</PrimaryButton>
                                     <button
                                         type="button"
                                         className="inline-flex items-center px-4 py-2 bg-primary border border-transparent rounded-2xl text-xs text-white capitalize tracking-widest hover:border-primary hover:bg-transparent hover:text-primary transition-all duration-500"

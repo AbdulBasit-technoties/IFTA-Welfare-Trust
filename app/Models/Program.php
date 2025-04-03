@@ -8,9 +8,13 @@ use Illuminate\Database\Eloquent\Model;
 class Program extends Model
 {
     use HasFactory;
-    protected $fillable = ['name','slug'];
+    protected $fillable = ['name', 'slug'];
     public function beneficiaries()
     {
         return $this->hasMany(Beneficiary::class, 'pid');
+    }
+    public function payments()
+    {
+        return $this->hasMany(Payment::class, 'pid');
     }
 }

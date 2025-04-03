@@ -24,7 +24,8 @@ export default function Index({ auth, users }) {
             }
         });
     };
-    console.log(users)
+    const roles = auth.user.roles.map(role => role.name);
+
     return (
         <AuthenticatedLayout auth={auth}>
             <Head title="User" />
@@ -49,6 +50,7 @@ export default function Index({ auth, users }) {
                                 <th>Name</th>
                                 <th>Email</th>
                                 <th>Phone</th>
+                                <th>Image</th>
                                 <th>Address</th>
                                 <th>Role</th>
                                 <th>Actions</th>
@@ -56,6 +58,10 @@ export default function Index({ auth, users }) {
                         </thead>
                         <tbody className="bg-white">
                             {users.data.map((item, index) => {
+                                {
+                                    item.beneficiary?.photo_attached ?
+                                        console.log(item.beneficiary.photo_attached) : ""
+                                }
                                 const roleName = item.roles.length > 0 ? item.roles[0].name : 'No Role';
 
                                 let phone = 'N/A';
@@ -84,9 +90,33 @@ export default function Index({ auth, users }) {
                                 return (
                                     <tr className="space-y-3 font-bold" key={item.id}>
                                         <td className="text-sm">{index + 1}</td>
-                                        <td className="text-sm">{item.name ?? 'N/A'}</td>
+                                        {item.donor ? (
+                                            <Link href={route('donors.show', item.id)} className="hover:underline">
+                                                <td className="text-sm">{item.name ?? 'N/A'}</td>
+                                            </Link>
+                                        ) :
+                                            item.beneficiary ? (
+                                                <Link href={route('beneficiaries.show', item.id)} className="hover:underline">
+                                                    <td className="text-sm">{item.name ?? 'N/A'}</td>
+                                                </Link>
+                                            ) :
+                                                (
+                                                    <td className="text-sm">{item.name ?? 'N/A'}</td>
+                                                )}
                                         <td className="text-sm">{item.email ?? 'N/A'}</td>
                                         <td className="text-sm">{phone}</td>
+                                        <td className="text-sm">
+                                            {item.beneficiary?.photo_attached ? (
+                                                <img
+                                                    src={`${window.location.origin}/storage/${item.beneficiary.photo_attached}`}
+                                                    width="80"
+                                                    height="80"
+                                                    alt="Beneficiary Image"
+                                                />
+                                            ) : (
+                                                <span>No Image</span>
+                                            )}
+                                        </td>
                                         <td className="text-sm">{address}</td>
                                         <td className="text-sm">{roleName}</td>
                                         <td className="text-sm">

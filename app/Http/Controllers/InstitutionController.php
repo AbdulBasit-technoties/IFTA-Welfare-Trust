@@ -28,7 +28,7 @@ class InstitutionController extends Controller
     public function create()
     {
         $FeesTime = [
-            ["label" => "1 Month", "value" => "1_month"],
+            ["label" => "Month", "value" => "month"],
             ["label" => "6 Months", "value" => "6_month"],
             ["label" => "Yearly", "value" => "yearly"],
         ];
@@ -76,7 +76,7 @@ class InstitutionController extends Controller
     public function edit(Institution $institution)
     {
         $FeesTime = [
-            ["label" => "1 Month", "value" => "1_month"],
+            ["label" => "Month", "value" => "month"],
             ["label" => "6 Months", "value" => "6_month"],
             ["label" => "Yearly", "value" => "yearly"],
         ];

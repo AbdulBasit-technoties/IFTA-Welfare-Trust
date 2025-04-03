@@ -32,7 +32,7 @@ class UpdateInstitutionRequest extends FormRequest
             'contact_no' => ['nullable', 'string', 'max:20'],
             'url'        => ['nullable', 'url', 'max:255'],
             'type'       => ['required', Rule::in(['school', 'college', 'university', 'course', 'postgraduate'])],
-            'fees_time'  => ['required', Rule::in(['1_month', '6_month', 'yearly'])],
+            'fees_time'  => ['required', Rule::in(['month', '6_month', 'yearly'])],
         ];
     }
 }

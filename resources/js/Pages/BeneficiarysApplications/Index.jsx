@@ -6,8 +6,13 @@ import { FaEdit, FaEye } from "react-icons/fa";
 import Modal from "@/Components/Modal";
 import { useState } from "react";
 import { HiChevronDown } from "react-icons/hi";
+import InputLabel from "@/Components/InputLabel";
+import TextArea from "@/Components/TextArea";
+import InputError from "@/Components/InputError";
+import SelectComponent from "@/Components/SelectComponent";
+import { useEffect } from "react";
 
-export default function Index({ auth, beneficiaries, statuses, status, programs, programId }) {
+export default function Index({ auth, beneficiaries, statuses, status, programs, programId, performance }) {
   const { setData, patch } = useForm({
     status: '',
   });
@@ -15,6 +20,15 @@ export default function Index({ auth, beneficiaries, statuses, status, programs,
   const [selectedItemId, setSelectedItemId] = useState(null);
   const [selectedStatus, setSelectedStatus] = useState('');
   const [prevStatus, setPrevStatus] = useState('');
+  const [isPerformanceModalOpen, setPerformanceModalOpen] = useState(false);
+  const [selectedUid, setSelectedUid] = useState(null);
+  const [selectedInstituteId, setSelectedInstituteId] = useState(null);
+  const openPerformanceModal = (uid, instituteId) => {
+    setSelectedUid(uid);
+    setSelectedInstituteId(instituteId);
+    setPerformanceModalOpen(true);
+  };
+
   const openStatusModal = (id, currentStatus) => {
     setSelectedItemId(id);
     setPrevStatus(currentStatus);
@@ -73,6 +87,7 @@ export default function Index({ auth, beneficiaries, statuses, status, programs,
   });
 
 
+
   const toggleCategory = (category) => {
     setExpandedCategories((prev) => ({
       ...prev,
@@ -96,10 +111,6 @@ export default function Index({ auth, beneficiaries, statuses, status, programs,
     });
   };
 
-
-
-
-
   const applyFilter = () => {
     const queryParams = new URLSearchParams();
 
@@ -110,6 +121,32 @@ export default function Index({ auth, beneficiaries, statuses, status, programs,
       method: "get",
     });
   };
+  const { data, setData: performanceSetData, post, errors } = useForm({
+    uid: '',
+    institute_id: '',
+    performance: '',
+    comment: '',
+  });
+
+
+  useEffect(() => {
+    performanceSetData('uid', selectedUid);
+    performanceSetData('institute_id', selectedInstituteId);
+  }, [selectedUid, selectedInstituteId]);
+
+  const submitPerformance = (e) => {
+    e.preventDefault();
+
+    post(route('beneficiary-performances.store'), {
+      preserveScroll: true,
+      onSuccess: () => setPerformanceModalOpen(false),
+    });
+  };
+
+
+  const filteredStatuses = roles.includes("Donor")
+    ? statuses.filter(status => ["Approved", "Cancelled"].includes(status.value))
+    : statuses;
 
   return (
     <AuthenticatedLayout auth={auth}>
@@ -129,7 +166,7 @@ export default function Index({ auth, beneficiaries, statuses, status, programs,
 
           </div>
         </div>
-        <div className="relative text-end mt-2">
+        <div className="relative text-end my-2">
           {/* Filter Button */}
           <button
             onClick={() => setOpen(!open)}
@@ -191,32 +228,34 @@ export default function Index({ auth, beneficiaries, statuses, status, programs,
                     className="filter-controller flex gap-3 my-3 text-sm font-bold items-center"
                   >
                     <HiChevronDown
-                      className={`transition-transform ${expandedCategories.status ? "rotate-180" : "rotate-90"
-                        }`}
+                      className={`transition-transform ${expandedCategories.status ? "rotate-180" : "rotate-90"}`}
                       size={20}
                     />
                     Status
                   </button>
                 </legend>
+
                 {expandedCategories.status && (
                   <div className="filter-category overflow-y-auto h-40 flex flex-col bg-gray-100 py-4 ps-5 rounded-sm">
-                    {statuses.map((item, index) => (
-                      <label key={index} className="text-sm text-gray-600 mb-2">
+                    {(
+                      auth.user.roles.some(role => role.name === "Donor")
+                        ? statuses.filter(status => ["Approved", "Cancelled"].includes(status.value))
+                        : statuses
+                    ).map((item, index) => (
+                      <label key={index} className="text-sm mb-2">
                         <input
                           type="checkbox"
                           className="mr-2"
                           value={item.value}
-                          checked={selectedFilters.status.includes(String(item.value))} // ✅ Convert status value to string
+                          checked={selectedFilters.status.includes(String(item.value))}
                           onChange={(e) => handleCheckboxChange(e, "status")}
                         />
-
                         {item.label}
                       </label>
                     ))}
                   </div>
                 )}
               </fieldset>
-
               <div className="flex mt-4">
                 <button
                   type="button"
@@ -243,7 +282,10 @@ export default function Index({ auth, beneficiaries, statuses, status, programs,
                 <th>#</th>
                 <th>Beneficiary’s Name</th>
                 <th>Program Name</th>
+                <th>Donor Name</th>
+                <th>Image</th>
                 <th>Status</th>
+                {!roles.includes('Beneficiary') && !roles.includes('Donor') && <th>Performance</th>}
                 <th>Actions</th>
               </tr>
             </thead>
@@ -253,13 +295,19 @@ export default function Index({ auth, beneficiaries, statuses, status, programs,
                   <td className="text-sm">{index + 1}</td>
                   <td className="text-sm">{item.beneficiary_name}</td>
                   <td className="text-sm">{item.program?.name ?? "No Program"}</td>
-                  <td className="text-sm"
-                    onClick={() => {
-                      if (!roles.includes('Beneficiary')) {
-                        openStatusModal(item.id, item.status);
-                      }
-                    }}
-                  >
+                  <td className="text-sm">{item.donor?.name ?? "No Program"}</td>
+                  <td className="text-sm">
+                    {item.photo_attached ? (
+                      <img
+                        src={`${window.location.origin}/storage/${item.photo_attached}`}
+                        alt="Beneficiary Image"
+                        className="w-20 h-18 object-cover rounded-lg"
+                      />
+                    ) : (
+                      <span>No Image</span>
+                    )}
+                  </td>
+                  <td className="text-sm">
                     {
                       (() => {
                         const statusMap = {
@@ -272,13 +320,26 @@ export default function Index({ auth, beneficiaries, statuses, status, programs,
                         const statusObj = statusMap[item.status] || { text: 'Unknown', color: 'bg-gray-500' };
 
                         return (
-                          <span className={`px-2 py-1 rounded-full text-white text-xs ${statusObj.color}`}>
+                          <span className={`px-2 py-1 rounded-full text-white text-xs ${statusObj.color}`} onClick={() => {
+                            if (!roles.includes('Beneficiary')) {
+                              openStatusModal(item.id, item.status);
+                            }
+                          }}>
                             {statusObj.text}
                           </span>
                         );
                       })()
                     }
                   </td>
+                  {!roles.includes('Beneficiary') && !roles.includes('Donor') &&
+                    <td className="text-sm">
+                      {(item?.program?.slug === 'schools' || item?.program?.slug === 'higher-educations') &&
+                        <button className="bg-primary px-2 py-1 rounded-full text-white text-xs" onClick={() => openPerformanceModal(item.uid, item.institute_id)}>
+                          Performance
+                        </button>
+                      }
+                    </td>
+                  }
                   <td className="text-sm">
                     <div className="flex gap-2">
                       <Link href={route('beneficiarys-applications.edit', item.id)} className="text-primary text-2xl">
@@ -315,31 +376,74 @@ export default function Index({ auth, beneficiaries, statuses, status, programs,
         <>
           <Modal show={isStatusModalOpen} onClose={() => setStatusModalOpen(false)} Title="Change Status">
             <form onSubmit={submit} className="space-y-6 p-5">
-              <p>Current Status: <strong>{selectedStatus}</strong></p>
-
-              {statuses
-                .filter((status) => status.value !== "All")
-                .map((status, index) => (
-                  <label key={status.id || `status-${index}`} className="flex gap-2">
-                    <input
-                      type="radio"
-                      name="status"
-                      value={status.value}
-                      checked={selectedStatus === status.value}
-                      onChange={() => setSelectedStatus(status.value)}
-                    />
-                    <span className="text-primary">{status.label}</span>
-                  </label>
-                ))}
+              <p className="text-gray-800">Current Status: <strong>{selectedStatus}</strong></p>
+              {(
+                auth.user.roles.some(role => role.name === "Donor")
+                  ? statuses.filter(status => ["Approved", "Cancelled"].includes(status.value))
+                  : statuses
+              ).map((status, index) => (
+                <label key={status.id || `status-${index}`} className="flex gap-2">
+                  <input
+                    type="radio"
+                    name="status"
+                    value={status.value}
+                    checked={selectedStatus === status.value}
+                    onChange={() => setSelectedStatus(status.value)}
+                  />
+                  <span className="text-primary">{status.label}</span>
+                </label>
+              ))}
 
               <div className="flex justify-between">
-                <button type="button" onClick={closeModals} className="px-4 py-2 bg-primary text-white rounded">Close</button>
-                <button type="submit" className="px-4 py-2 bg-primary text-white rounded">Update Status</button>
+                <button type="button" onClick={closeModals} className="inline-flex items-center ml-2 px-4 py-2 bg-primary border border-transparent rounded-2xl text-xs text-white capitalize tracking-widest hover:border-primary hover:bg-transparent hover:text-primary transition-all duration-500">Close</button>
+                <button type="submit" className="inline-flex items-center ml-2 px-4 py-2 bg-primary border border-transparent rounded-2xl text-xs text-white capitalize tracking-widest hover:border-primary hover:bg-transparent hover:text-primary transition-all duration-500">Update Status</button>
               </div>
             </form>
           </Modal>
         </>
       )}
+
+      {isPerformanceModalOpen && (
+        <Modal show={isPerformanceModalOpen} onClose={() => setPerformanceModalOpen(false)} Title="Performance Details">
+          <div className="p-5 space-y-4">
+            {/* Performance Details */}
+            <h2 className="font-bold text-gray-800">Enter Beneficiary Performance Details</h2>
+            <form onSubmit={submitPerformance}>
+              {/* Performance Select Box */}
+              <div>
+                <InputLabel htmlFor="performance" value="Performance" />
+                <SelectComponent
+                  id="performance"
+                  value={data.performance}
+                  onChange={(e) => performanceSetData('performance', e)}
+                  options={performance}
+                  className="mt-1 block w-full"
+                />
+                <InputError className="mt-2" message={errors.performance} />
+              </div>
+
+              {/* Comment Box */}
+              <div>
+                <InputLabel htmlFor="comment" value="Comment" />
+                <TextArea
+                  id="comment"
+                  value={data.comment || ''}
+                  onChange={(e) => performanceSetData('comment', e.target.value)}
+                  className="mt-1 block w-full"
+                />
+                <InputError className="mt-2" message={errors.comment} />
+              </div>
+
+              {/* Buttons */}
+              <div className="flex justify-between mt-4">
+                <button type="button" onClick={() => setPerformanceModalOpen(false)} className="inline-flex items-center ml-2 px-4 py-2 bg-primary border border-transparent rounded-2xl text-xs text-white capitalize tracking-widest hover:border-primary hover:bg-transparent hover:text-primary transition-all duration-500">Close</button>
+                <button type="submit" className="inline-flex items-center ml-2 px-4 py-2 bg-primary border border-transparent rounded-2xl text-xs text-white capitalize tracking-widest hover:border-primary hover:bg-transparent hover:text-primary transition-all duration-500">Submit</button>
+              </div>
+            </form>
+          </div>
+        </Modal>
+      )}
+
 
     </AuthenticatedLayout>
   );

@@ -80,7 +80,7 @@ return new class extends Migration
             $table->foreignId('pid')->nullable()->constrained('programs')->nullOnDelete();
             $table->string('uid')->nullable();
             $table->enum('education_type', ['school', 'college', 'university', 'course', 'postgraduate'])->nullable();
-            $table->enum('fees_time', ['1_month', '6_month', 'yearly']);
+            $table->enum('fees_time', ['month', '6_month', 'yearly'])->nullable();
             $table->foreignId('institute_id')->nullable()->constrained('institutions')->nullOnDelete();
             $table->enum('status', ['Request', 'Pending Approval', 'Approved', 'Cancelled'])->default('Request');
             $table->timestamps();

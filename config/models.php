@@ -7,6 +7,10 @@ return [
         'users',
         'institutions',
         'beneficiarys-applications',
+        'beneficiary-performances',
         'programs',
+        'payments',
+        'beneficiaries',
+        'donors'
     ],
 ];

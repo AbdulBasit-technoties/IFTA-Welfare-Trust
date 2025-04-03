@@ -9,6 +9,7 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 use Spatie\Permission\Models\Role;
+use Illuminate\Database\Eloquent\Builder;
 
 class User extends Authenticatable
 {
@@ -57,17 +58,6 @@ class User extends Authenticatable
     {
         return $this->hasMany(Beneficiary::class, 'did');
     }
-    public function getBeneficiaries()
-    {
-        if ($this->hasRole('Beneficiary')) {
-            return Beneficiary::where('uid', $this->id);
-        } elseif ($this->hasRole('Donor')) {
-            return Beneficiary::where('did', $this->id);
-        } else {
-            return Beneficiary::query();
-        }
-    }
-
     public function accountant()
     {
         return $this->hasOne(Accountant::class, 'uid');
@@ -85,5 +75,42 @@ class User extends Authenticatable
     public function educationOfficer()
     {
         return $this->hasOne(EducationOfficer::class, 'uid');
+    }
+    public function performances()
+    {
+        return $this->hasMany(BeneficiaryPerformance::class, 'uid');
+    }
+
+    public function donations()
+    {
+        return $this->hasMany(Payment::class, 'did');
+    }
+
+    public function receivedPayments()
+    {
+        return $this->hasMany(Payment::class, 'bid');
+    }
+
+    public function approvedPayments()
+    {
+        return $this->hasMany(Payment::class, 'approved_by');
+    }
+
+    public function createdPayments()
+    {
+        return $this->hasMany(Payment::class, 'created_by');
+    }
+    public function scopeFilterByRole(Builder $query, $role = null)
+    {
+        if ($role) {
+            $query->whereHas('roles', function ($q) use ($role) {
+                $q->where('name', $role);
+            });
+        }
+        return $query;
+    }
+    public function payments()
+    {
+        return $this->hasMany(Payment::class, 'did', 'id');
     }
 }

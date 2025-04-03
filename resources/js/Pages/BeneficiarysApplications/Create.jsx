@@ -281,7 +281,7 @@ export default function Index({ auth, beneficiaries, TypeOptions, beneficiaryDat
     };
 
     const feesTimeOptions = {
-        "1_month": "1 Month",
+        "month": "Month",
         "6_month": "6 Months",
         "yearly": "Yearly",
     };
@@ -427,7 +427,7 @@ export default function Index({ auth, beneficiaries, TypeOptions, beneficiaryDat
                                             />
                                             <InputError className="mt-2" message={errors.beneficiary_contact_no} />
                                         </div>
-                                        <div className="xl:col-span-3 lg:col-span-4 sm:col-span-6 col-span-12">
+                                        <div className="xl:col-span-4 sm:col-span-6 col-span-12">
                                             <InputLabel htmlFor="guardian_contact_no" value="Guardian Contact No" />
                                             <TextInput
                                                 id="guardian_contact_no"
@@ -441,20 +441,7 @@ export default function Index({ auth, beneficiaries, TypeOptions, beneficiaryDat
                                             />
                                             <InputError className="mt-2" message={errors.guardian_contact_no} />
                                         </div>
-                                        <div className="xl:col-span-3 lg:col-span-4 sm:col-span-6 col-span-12">
-                                            <InputLabel htmlFor="photo_attached" value="Photo Attached" />
-                                            <TextInput
-                                                id="photo_attached"
-                                                className="mt-1 block w-full"
-                                                value={data.photo_attached || ''}
-                                                onChange={(e) => setData('photo_attached', e.target.files[0])}
-                                                isFocused
-                                                autoComplete="photo_attached"
-                                                type="file"
-                                            />
-                                            <InputError className="mt-2" message={errors.occupation} />
-                                        </div>
-                                        <div className="xl:col-span-3 lg:col-span-4 sm:col-span-6 col-span-12">
+                                        <div className="xl:col-span-4 sm:col-span-6 col-span-12">
                                             <InputLabel htmlFor="occupation" value="Occupation" />
                                             <TextInput
                                                 id="occupation"
@@ -468,7 +455,7 @@ export default function Index({ auth, beneficiaries, TypeOptions, beneficiaryDat
                                             />
                                             <InputError className="mt-2" message={errors.occupation} />
                                         </div>
-                                        <div className="xl:col-span-3 lg:col-span-4 sm:col-span-6 col-span-12">
+                                        <div className="xl:col-span-4 sm:col-span-6 col-span-12">
                                             <InputLabel htmlFor="date_of_birth" value="Date of Birth" />
                                             <TextInput
                                                 id="date_of_birth"
@@ -481,7 +468,7 @@ export default function Index({ auth, beneficiaries, TypeOptions, beneficiaryDat
                                             />
                                             <InputError className="mt-2" message={errors.date_of_birth} />
                                         </div>
-                                        <div className="xl:col-span-3 lg:col-span-4 sm:col-span-6 col-span-12">
+                                        <div className="xl:col-span-4 sm:col-span-6 col-span-12">
                                             <InputLabel htmlFor="sign" value="Signature" />
                                             <TextInput
                                                 id="sign"
@@ -494,7 +481,7 @@ export default function Index({ auth, beneficiaries, TypeOptions, beneficiaryDat
                                             />
                                             <InputError className="mt-2" message={errors.sign} />
                                         </div>
-                                        <div className="xl:col-span-3 lg:col-span-4 sm:col-span-6 col-span-12">
+                                        <div className="xl:col-span-4 sm:col-span-6 col-span-12">
                                             <InputLabel htmlFor="household_income" value="Household Income" />
                                             <TextInput
                                                 id="household_income"
@@ -507,7 +494,7 @@ export default function Index({ auth, beneficiaries, TypeOptions, beneficiaryDat
                                             />
                                             <InputError className="mt-2" message={errors.household_income} />
                                         </div>
-                                        <div className="xl:col-span-3 lg:col-span-4 sm:col-span-6 col-span-12">
+                                        <div className="xl:col-span-4 sm:col-span-6 col-span-12">
                                             <InputLabel htmlFor="family_members" value="Number of Family Members" />
                                             <TextInput
                                                 id="family_members"
@@ -531,7 +518,7 @@ export default function Index({ auth, beneficiaries, TypeOptions, beneficiaryDat
                                             />
                                             <InputError className="mt-2" message={errors.marital_status} />
                                         </div>
-                                        <div className="xl:col-span-4 lg:col-span-6 sm:col-span-6 col-span-12">
+                                        <div className="xl:col-span-3 lg:col-span-6 sm:col-span-6 col-span-12">
                                             <InputLabel htmlFor="gender" value="Gender" />
                                             <SelectComponent
                                                 id="gender"
@@ -542,7 +529,7 @@ export default function Index({ auth, beneficiaries, TypeOptions, beneficiaryDat
                                             />
                                             <InputError className="mt-2" message={errors.gender} />
                                         </div>
-                                        <div className="xl:col-span-4 lg:justify-center lg:col-span-6 sm:col-span-6 col-span-12 flex items-center gap-3">
+                                        <div className="xl:col-span-3 lg:justify-center lg:col-span-6 sm:col-span-6 col-span-12 flex items-center gap-3">
                                             <InputLabel htmlFor="syed" value="Syed" />
 
                                             <input
@@ -566,7 +553,7 @@ export default function Index({ auth, beneficiaries, TypeOptions, beneficiaryDat
                                             <InputLabel htmlFor="syed_no" value="No" />
                                         </div>
 
-                                        <div className="xl:col-span-4 lg:justify-center lg:col-span-6 sm:col-span-6 col-span-12 flex items-center gap-3">
+                                        <div className="xl:col-span-3 lg:justify-center lg:col-span-6 sm:col-span-6 col-span-12 flex items-center gap-3">
                                             <InputLabel htmlFor="orphan" value="Orphan" />
 
                                             <input

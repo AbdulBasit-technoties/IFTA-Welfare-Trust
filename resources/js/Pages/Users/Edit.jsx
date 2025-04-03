@@ -36,7 +36,7 @@ export default function Index({ auth, roles, MaritalStatus, patientGender, benef
 
         setData({
             name: user.name || user.hr?.name || user.donor?.name || user.accountant?.name || user.education_officer?.name || "",
-            email: user.email || user.hr?.email || user.donor?.email || user.accountant?.email || user.education_officer?.email ||  "",
+            email: user.email || user.hr?.email || user.donor?.email || user.accountant?.email || user.education_officer?.email || "",
             guardian_name: user.beneficiary?.guardian_name || "",
             guardian_contact_no: user.beneficiary?.guardian_contact_no || "",
             guardian_cnic: user.beneficiary?.guardian_cnic || "",
@@ -72,8 +72,8 @@ export default function Index({ auth, roles, MaritalStatus, patientGender, benef
         <AuthenticatedLayout auth={auth}>
             <Head title="Roles" />
 
-            <section className="py-24 px-10">
-                <form onSubmit={submit} className="mt-6" encType="multipart/form-data">
+            <section className="py-24 px-10 grid grid-cols-12 gap-5">
+                <form onSubmit={submit} className={`${data.role === 'Beneficiary' ? 'xl:col-span-9 col-span-12' : 'col-span-12'}  mt-6`} encType="multipart/form-data">
                     <header className="p-3 flex justify-between items-center bg-primary rounded-tl-2xl rounded-tr-2xl text-white">
                         <div>
                             <h2 className="sm:text-lg text-xs font-medium">Edit User</h2>
@@ -96,7 +96,7 @@ export default function Index({ auth, roles, MaritalStatus, patientGender, benef
                         </div>
                         {selectedRole && (
                             <>
-                                <div className={`${data.role === 'Admin' ? 'col-span-6' : data.role === 'Beneficiary' ? 'col-span-3' : 'col-span-4'}`}>
+                                <div className={`${data.role === 'Admin' ? 'sm:col-span-6 col-span-12' : data.role === 'Beneficiary' ? 'md:col-span-4 sm:col-span-6 col-span-12' : 'sm:col-span-4 col-span-12'}`}>
                                     <InputLabel htmlFor="name" value={`${data.role === 'Beneficiary' ? 'Beneficiary Name' : 'Name'}`} />
                                     <TextInput
                                         id="name"
@@ -110,7 +110,7 @@ export default function Index({ auth, roles, MaritalStatus, patientGender, benef
                                     />
                                     <InputError className="mt-2" message={errors.name} />
                                 </div>
-                                <div className={`${data.role === 'Beneficiary' ? 'col-span-3' : 'hidden'}`}>
+                                <div className={`${data.role === 'Beneficiary' ? 'md:col-span-4 sm:col-span-6 col-span-12' : 'hidden'}`}>
                                     <InputLabel htmlFor="guardian_name" value="Guardian Name" />
                                     <TextInput
                                         id="guardian_name"
@@ -123,7 +123,7 @@ export default function Index({ auth, roles, MaritalStatus, patientGender, benef
                                     />
                                     <InputError className="mt-2" message={errors.guardian_name} />
                                 </div>
-                                <div className={`${data.role === 'Admin' ? 'col-span-6' : data.role === 'Beneficiary' ? 'col-span-3' : 'col-span-4'}`}>
+                                <div className={`${data.role === 'Admin' ? 'sm:col-span-6 col-span-12' : data.role === 'Beneficiary' ? 'md:col-span-4 sm:col-span-6 col-span-12' : 'sm:col-span-4 col-span-12'}`}>
                                     <InputLabel htmlFor="email" value="Email" />
                                     <TextInput
                                         id="email"
@@ -137,7 +137,7 @@ export default function Index({ auth, roles, MaritalStatus, patientGender, benef
                                     />
                                     <InputError className="mt-2" message={errors.email} />
                                 </div>
-                                <div className={`${data.role === 'Beneficiary' ? 'col-span-3' : 'hidden'}`}>
+                                <div className={`${data.role === 'Beneficiary' ? 'md:col-span-4 sm:col-span-6 col-span-12' : 'hidden'}`}>
                                     <InputLabel htmlFor="beneficiary_cnic" value="Beneficiary CNIC" />
                                     <TextInput
                                         id="beneficiary_cnic"
@@ -150,7 +150,7 @@ export default function Index({ auth, roles, MaritalStatus, patientGender, benef
                                     />
                                     <InputError className="mt-2" message={errors.beneficiary_cnic} />
                                 </div>
-                                <div className={`${data.role === 'Beneficiary' ? 'col-span-3' : 'hidden'}`}>
+                                <div className={`${data.role === 'Beneficiary' ? 'md:col-span-4 sm:col-span-6 col-span-12' : 'hidden'}`}>
                                     <InputLabel htmlFor="guardian_cnic" value="Guardian CNIC" />
                                     <TextInput
                                         id="guardian_cnic"
@@ -163,7 +163,7 @@ export default function Index({ auth, roles, MaritalStatus, patientGender, benef
                                     />
                                     <InputError className="mt-2" message={errors.guardian_cnic} />
                                 </div>
-                                <div className={`${data.role === 'Beneficiary' ? 'col-span-3' : 'hidden'}`}>
+                                <div className={`${data.role === 'Beneficiary' ? 'md:col-span-4 sm:col-span-6 col-span-12' : 'hidden'}`}>
                                     <InputLabel htmlFor="guardian_contact_no" value="Guardian Contact No" />
                                     <TextInput
                                         id="guardian_contact_no"
@@ -176,7 +176,7 @@ export default function Index({ auth, roles, MaritalStatus, patientGender, benef
                                     />
                                     <InputError className="mt-2" message={errors.guardian_contact_no} />
                                 </div>
-                                <div className={`${data.role === 'Admin' ? 'hidden' : data.role === 'Beneficiary' ? 'col-span-3' : 'col-span-4'}`}>
+                                <div className={`${data.role === 'Admin' ? 'hidden' : data.role === 'Beneficiary' ? 'md:col-span-4 sm:col-span-6 col-span-12' : 'sm:col-span-4 col-span-12'}`}>
                                     <InputLabel htmlFor="phone" value={`${data.role === 'Beneficiary' ? 'Beneficiary Contact No' : 'Phone'}`} />
                                     <TextInput
                                         id="phone"
@@ -189,7 +189,7 @@ export default function Index({ auth, roles, MaritalStatus, patientGender, benef
                                     />
                                     <InputError className="mt-2" message={errors.phone} />
                                 </div>
-                                <div className={`${data.role === 'Beneficiary' ? 'col-span-3' : 'hidden'}`}>
+                                <div className={`${data.role === 'Beneficiary' ? 'md:col-span-4 sm:col-span-6 col-span-12' : 'hidden'}`}>
                                     <InputLabel htmlFor="occupation" value="Occupation" />
                                     <TextInput
                                         id="occupation"
@@ -202,12 +202,12 @@ export default function Index({ auth, roles, MaritalStatus, patientGender, benef
                                     />
                                     <InputError className="mt-2" message={errors.occupation} />
                                 </div>
-                                <div className={`${data.role === 'Beneficiary' ? 'col-span-3' : 'hidden'}`}>
+                                <div className={`${data.role === 'Beneficiary' ? 'md:col-span-4 sm:col-span-6 col-span-12' : 'hidden'}`}>
                                     <InputLabel htmlFor="date_of_birth" value="Date of Birth" />
                                     <TextInput id="date_of_birth" className="mt-1 block w-full" value={data.date_of_birth || ''} onChange={(e) => setData('date_of_birth', e.target.value)} autoComplete="date_of_birth" type="date" />
                                     <InputError className="mt-2" message={errors.date_of_birth} />
                                 </div>
-                                <div className={`${data.role === 'Beneficiary' ? 'col-span-3' : 'hidden'}`}>
+                                <div className={`${data.role === 'Beneficiary' ? 'md:col-span-4 sm:col-span-6 col-span-12' : 'hidden'}`}>
                                     <InputLabel htmlFor="sign" value="Signature" />
                                     <TextInput
                                         id="sign"
@@ -219,7 +219,7 @@ export default function Index({ auth, roles, MaritalStatus, patientGender, benef
                                     />
                                     <InputError className="mt-2" message={errors.sign} />
                                 </div>
-                                <div className={`${data.role === 'Beneficiary' ? 'col-span-3' : 'hidden'}`}>
+                                <div className={`${data.role === 'Beneficiary' ? 'md:col-span-4 sm:col-span-6 col-span-12' : 'hidden'}`}>
                                     <InputLabel htmlFor="household_income" value="Household Income" />
                                     <TextInput
                                         id="household_income"
@@ -231,7 +231,7 @@ export default function Index({ auth, roles, MaritalStatus, patientGender, benef
                                     />
                                     <InputError className="mt-2" message={errors.household_income} />
                                 </div>
-                                <div className={`${data.role === 'Beneficiary' ? 'col-span-3' : 'hidden'}`}>
+                                <div className={`${data.role === 'Beneficiary' ? 'md:col-span-4 sm:col-span-6 col-span-12' : 'hidden'}`}>
                                     <InputLabel htmlFor="family_members" value="Number of Family Members" />
                                     <TextInput
                                         id="family_members"
@@ -243,7 +243,7 @@ export default function Index({ auth, roles, MaritalStatus, patientGender, benef
                                     />
                                     <InputError className="mt-2" message={errors.family_members} />
                                 </div>
-                                <div className={`${data.role === 'Beneficiary' ? 'col-span-3 flex gap-3' : 'hidden'}`}>
+                                <div className={`${data.role === 'Beneficiary' ? 'md:col-span-4 sm:col-span-6 col-span-12 flex gap-3' : 'hidden'}`}>
                                     <InputLabel htmlFor="syed" value="Syed" />
 
                                     <input
@@ -267,7 +267,7 @@ export default function Index({ auth, roles, MaritalStatus, patientGender, benef
                                     <InputLabel htmlFor="syed_no" value="No" />
                                 </div>
 
-                                <div className={`${data.role === 'Beneficiary' ? 'col-span-3 flex gap-3' : 'hidden'}`}>
+                                <div className={`${data.role === 'Beneficiary' ? 'md:col-span-4 sm:col-span-6 col-span-12 flex gap-3' : 'hidden'}`}>
                                     <InputLabel htmlFor="orphan" value="Orphan" />
 
                                     <input
@@ -290,7 +290,7 @@ export default function Index({ auth, roles, MaritalStatus, patientGender, benef
                                     />
                                     <InputLabel htmlFor="orphan_no" value="No" />
                                 </div>
-                                <div className={`${data.role === 'Beneficiary' ? 'col-span-3' : 'hidden'}`}>
+                                <div className={`${data.role === 'Beneficiary' ? 'md:col-span-4 sm:col-span-6 col-span-12' : 'hidden'}`}>
                                     <InputLabel htmlFor="marital_status" value="Marital Status" />
                                     <SelectComponent
                                         id="marital_status"
@@ -301,7 +301,7 @@ export default function Index({ auth, roles, MaritalStatus, patientGender, benef
                                     />
                                     <InputError className="mt-2" message={errors.marital_status} />
                                 </div>
-                                <div className={`${data.role === 'Beneficiary' ? 'col-span-3' : 'hidden'}`}>
+                                <div className={`${data.role === 'Beneficiary' ? 'md:col-span-6 sm:col-span-6 col-span-12' : 'hidden'}`}>
                                     <InputLabel htmlFor="gender" value="Gender" />
                                     <SelectComponent
                                         id="gender"
@@ -313,7 +313,7 @@ export default function Index({ auth, roles, MaritalStatus, patientGender, benef
                                     <InputError className="mt-2" message={errors.gender} />
                                 </div>
 
-                                <div className={`${data.role === 'Beneficiary' ? 'col-span-4' : 'hidden'}`}>
+                                <div className={`${data.role === 'Beneficiary' ? 'md:col-span-6 col-span-12' : 'hidden'}`}>
                                     <InputLabel htmlFor="description" value="Description" />
                                     <TextArea
                                         id="description"
@@ -323,7 +323,7 @@ export default function Index({ auth, roles, MaritalStatus, patientGender, benef
                                     />
                                     <InputError className="mt-2" message={errors.description} />
                                 </div>
-                                <div className={`${data.role === 'Beneficiary' ? 'col-span-4' : 'hidden'}`}>
+                                <div className={`${data.role === 'Beneficiary' ? 'md:col-span-6 col-span-12' : 'hidden'}`}>
                                     <InputLabel htmlFor="disability" value="Disability" />
                                     <TextArea
                                         id="disability"
@@ -333,7 +333,7 @@ export default function Index({ auth, roles, MaritalStatus, patientGender, benef
                                     />
                                     <InputError className="mt-2" message={errors.disability} />
                                 </div>
-                                <div className={`${data.role === 'Admin' ? 'hidden' : data.role === 'Beneficiary' ? 'col-span-4' : 'col-span-12'}`}>
+                                <div className={`${data.role === 'Admin' ? 'hidden' : data.role === 'Beneficiary' ? 'md:col-span-6 col-span-12' : 'col-span-12'}`}>
                                     <InputLabel htmlFor="address" value="Address" />
                                     <TextArea
                                         id="address"
@@ -357,6 +357,56 @@ export default function Index({ auth, roles, MaritalStatus, patientGender, benef
                         </div>
                     </div>
                 </form>
+                {data.role === 'Beneficiary' ?
+                    <div className={`${data.role === 'Beneficiary' ? 'xl:col-span-3  col-span-12' : ''}`}>
+                        <div onSubmit={submit} className={`${data.role === 'Beneficiary' ? 'col-span-9' : 'col-span-12'}  mt-6`}>
+                            <header className="p-3 flex justify-between items-center bg-primary rounded-tl-2xl rounded-tr-2xl text-white">
+                                <div>
+                                    <h2 className="sm:text-lg text-xs font-medium">Edit User Image</h2>
+                                    <p className="mt-1 sm:text-sm text-xs">
+                                        Edit your user image here
+                                    </p>
+                                </div>
+                            </header>
+                            <div className="bg-white rounded-md grid grid-cols-1 gap-5 p-sm:6 p-2">
+                                <div className="">
+                                    <InputLabel htmlFor="photo_attached" value="Photo Attached" />
+                                    <TextInput
+                                        id="photo_attached"
+                                        className="mt-1 block w-full"
+                                        isFocused
+                                        onChange={(e) => {
+                                            const file = e.target.files[0];
+                                            if (file) {
+                                                const formData = new FormData();
+                                                formData.append("photo_attached", file);
+                                                formData.append("beneficiary_id", user.beneficiary.id); // Beneficiary ka ID bhejna zaroori hai
+
+                                                router.post(route("beneficiaryimageupload"), formData, {
+                                                    forceFormData: true,
+                                                    onSuccess: () => {
+                                                        console.log("Photo updated successfully!");
+                                                    },
+                                                    onError: (errors) => {
+                                                        console.error("Error uploading photo:", errors);
+                                                    }
+                                                });
+                                            }
+                                        }}
+                                        type="file"
+                                    />
+                                </div>
+                                <div className="">
+                                    <img
+                                        src={user.beneficiary?.photo_attached ? `/storage/${user.beneficiary.photo_attached}` : 'default-image.png'}
+                                        alt="Beneficiary Image"
+                                        className="w-full h-full object-cover"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    : ""}
             </section>
         </AuthenticatedLayout>
     );

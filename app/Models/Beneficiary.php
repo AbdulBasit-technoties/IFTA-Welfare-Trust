@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class Beneficiary extends Model
 {
@@ -101,5 +102,36 @@ class Beneficiary extends Model
     public function program()
     {
         return $this->belongsTo(Program::class, 'pid');
+    }
+    public function performances()
+    {
+        return $this->hasMany(BeneficiaryPerformance::class, 'uid', 'uid');
+    }
+    public function scopeFiltered($query, $request)
+    {
+        $user = Auth::user();
+
+        // **Role-based filtering**
+        if ($user->hasRole('Donor')) {
+            $query->where('did', $user->id);
+        } elseif ($user->hasRole('Education Officer')) {
+            $query->whereHas('program', function ($q) {
+                $q->whereIn('slug', ['schools', 'higher-educations']);
+            });
+        } elseif ($user->hasRole('Beneficiary')) {
+            $query->where('uid', $user->id);
+        }
+        // Baqi users ke liye koi restriction nahi (sab record milay ga)
+
+        // **Apply additional filters from request**
+        if ($request->filled('status') && $request->input('status') !== 'All') {
+            $query->where('status', $request->input('status'));
+        }
+
+        if ($request->filled('program') && !in_array("All", $request->input('program'))) {
+            $query->whereIn('pid', $request->input('program'));
+        }
+
+        return $query;
     }
 }

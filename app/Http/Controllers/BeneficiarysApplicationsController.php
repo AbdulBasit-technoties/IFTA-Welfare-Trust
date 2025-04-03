@@ -10,43 +10,37 @@ use App\Models\Institution;
 use App\Models\Program;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
 class BeneficiarysApplicationsController extends Controller
 {
+
     public function Index(Request $request)
     {
-        $status = $request->input('status', 'All');
-        $programIds = $request->input('program', []);
+        $beneficiaries = Beneficiary::with('program', 'donor')->filtered($request)->paginate(10);
 
-        $query = Beneficiary::with('program');
-
-        if ($status !== 'All') {
-            $query->where('status', $status);
-        }
-
-        if (!empty($programIds) && !in_array("All", $programIds)) {
-            $query->whereIn('pid', $programIds);
-        }
-
-        $beneficiaries = $query->paginate(10);
-
-        $programs = Program::get()->map(function ($program) {
-            return [
-                'label' => $program->name,
-                'value' => (string) $program->id,
-            ];
-        })->toArray();
+        $programs = Program::get()->map(fn($program) => [
+            'label' => $program->name,
+            'value' => (string) $program->id,
+        ])->toArray();
 
         $statuses = [
-            ["label" => "All", "value" => "All"],
             ["label" => "Request", "value" => "Request"],
             ["label" => "Approved", "value" => "Approved"],
             ["label" => "Pending Approval", "value" => "Pending Approval"],
             ["label" => "Cancelled", "value" => "Cancelled"],
         ];
 
-        return Inertia::render('BeneficiarysApplications/Index', compact('beneficiaries', 'statuses', 'status', 'programs', 'programIds'));
+        $performance = [
+            ["label" => "Excellent", "value" => "Excellent"],
+            ["label" => "Good", "value" => "Good"],
+            ["label" => "Average", "value" => "Average"],
+            ["label" => "Below Average", "value" => "Below Average"],
+            ["label" => "Poor", "value" => "Poor"],
+        ];
+
+        return Inertia::render('BeneficiarysApplications/Index', compact('beneficiaries', 'statuses', 'programs', 'performance'));
     }
 
 
@@ -60,12 +54,14 @@ class BeneficiarysApplicationsController extends Controller
         $education_type = $request->input('education_type');
         $programSlug = Program::where('id', $pid)->value('slug');
         if ($uid && $pid) {
-            // $beneficiaryData = Beneficiary::where('uid', $uid)
-            //     ->where('pid', $pid)
-            //     ->first();
-            return redirect()->back()->with([
-                'error' => 'This beneficiary already exists for the given program.'
-            ]);
+            $beneficiaryData = Beneficiary::where('uid', $uid)
+                ->where('pid', $pid)
+                ->first();
+            if ($beneficiaryData) {
+                return redirect()->back()->with([
+                    'error' => 'This beneficiary already exists for the given program.'
+                ]);
+            }
         }
         if (empty($beneficiaryData)) {
             $beneficiaryData = Beneficiary::where('uid', $uid)->select([
@@ -212,13 +208,22 @@ class BeneficiarysApplicationsController extends Controller
             'patientGender',
         ));
     }
-    public function Show()
+    public function Show($id)
     {
-        return redirect()->back();
+        $beneficiaries = Beneficiary::with('performances', 'institute')->find($id);
+        return Inertia::render('BeneficiarysApplications/Show', compact('beneficiaries'));
     }
+   
+
     public function update(UpdateBeneficiaryApplicationRequest $request, $id)
     {
         $beneficiary = Beneficiary::find($id);
+        if ($beneficiary->status === 'Approved') {
+            DB::table('donor_payments')->updateOrInsert(
+                ['did' => $beneficiary->did],
+                ['total_paid' => DB::raw('total_paid + ' . ($beneficiary->approved_amount ?? 0))]
+            );
+        }
         $beneficiary->update($request->all());
         return redirect()->route('beneficiarys-applications.index')->with([
             'message' => 'Beneficiary updated successfully!'

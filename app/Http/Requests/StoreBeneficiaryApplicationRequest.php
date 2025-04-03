@@ -24,6 +24,7 @@ class StoreBeneficiaryApplicationRequest extends FormRequest
      */
     public function rules()
     {
+
         return [
             'beneficiary_name' => 'required|string|max:255',
             'guardian_name' => 'nullable|string|max:255',
@@ -69,7 +70,7 @@ class StoreBeneficiaryApplicationRequest extends FormRequest
             'institute_id' => 'nullable|integer|exists:institutions,id',
             'total_semesters' => 'nullable|integer|min:1',
             'education_type'       => 'nullable', 'in:school,college,university,course,postgraduate',
-            'fees_time'  => 'nullable', 'in:1_month,6_month,yearly',
+            'fees_time'  => 'nullable', 'in:month,6_month,yearly',
             'approved_amount' => 'nullable|numeric|min:0',
             'institute_ntn' => 'nullable|string|max:20',
             'reference_name' => 'nullable|string|max:255',

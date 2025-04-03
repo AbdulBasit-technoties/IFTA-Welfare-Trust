@@ -26,7 +26,7 @@ class UpdateBeneficiaryApplicationRequest extends FormRequest
     {
         if ($this->routeIs('beneficiarys-applications.update') && $this->has('status') && count($this->all()) === 1) {
             return [
-                'status' => 'required|string|in:Pending,Approved,Pending Approval,Cancelled',
+                'status' => 'required|string|in:Request,Approved,Pending Approval,Cancelled',
             ];
         }
         return [
@@ -68,7 +68,7 @@ class UpdateBeneficiaryApplicationRequest extends FormRequest
             'institute_id' => 'nullable|integer|exists:institutions,id',
             'total_semesters' => 'nullable|integer|min:1',
             'education_type'       => 'nullable', 'in:school,college,university,course,postgraduate',
-            'fees_time'  => 'nullable', 'in:1_month,6_month,yearly',
+            'fees_time'  => 'nullable', 'in:month,6_month,yearly',
             'approved_amount' => 'nullable|numeric|min:0',
             'institute_ntn' => 'nullable|string|max:20',
             'reference_name' => 'nullable|string|max:255',

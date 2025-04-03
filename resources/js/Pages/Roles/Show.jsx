@@ -66,7 +66,7 @@ function View(props) {
                     <div className="py-6 gap-4 grid xl:grid-cols-3 lg:grid-cols-3 grid-cols-2">
 
                         {Object.entries(groupedPermissions).map(([item, actions]) => (
-                            <div key={item} className="bg-primary text-white dark:bg-white dark:text-primary p-6 rounded-2xl shadow-lg">
+                            <div key={item} className="bg-white text-primary p-6 rounded-2xl shadow-lg">
                                 <h4 className="font-semibold capitalize flex items-center gap-2 mb-2">
                                     <input
                                         type="checkbox"

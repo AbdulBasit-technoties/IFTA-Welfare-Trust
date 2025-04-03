@@ -17,11 +17,16 @@ use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $users = User::with(['roles', 'donor', 'accountant', 'hr', 'beneficiary', 'educationOfficer'])->paginate(10);
-        return Inertia::render('Users/Index', compact('users'));
+        $role = $request->input('role'); // Role filter ko request se le rahe hain
+        $users = User::with(['roles', 'donor', 'accountant', 'hr', 'beneficiary', 'educationOfficer'])
+            ->filterByRole($role) // Ab model ke scope method ka use ho raha hai
+            ->paginate(10);
+
+        return Inertia::render('Users/Index', compact('users', 'role'));
     }
+
 
 
     public function create()
@@ -231,6 +236,10 @@ class UserController extends Controller
         return redirect()->route('users.index')->with([
             'message' => 'User updated successfully!'
         ]);
+    }
+    public function Show(User $user) {
+        $users = User::with(['roles', 'donor', 'accountant', 'hr', 'beneficiary', 'educationOfficer'])->get();
+        return Inertia::render('Users/Show', compact('users'));
     }
 
     public function destroy(User $user)
