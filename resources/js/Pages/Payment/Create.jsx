@@ -8,7 +8,7 @@ import SelectComponent from "@/Components/SelectComponent";
 import TextArea from "@/Components/TextArea";
 import { useState } from "react";
 import { useEffect } from "react";
-export default function Index({ auth, donors, beneficiaries, PaymentStatus, beneficiaryProgram, OptionPayments, beneficiaryRecord }) {
+export default function Index({ auth, donors, beneficiaries, PaymentStatus, beneficiaryProgram, OptionPayments, beneficiaryRecord, bid, did, pid }) {
 
     const { data, setData, post, errors } = useForm({
         did: null,
@@ -22,6 +22,35 @@ export default function Index({ auth, donors, beneficiaries, PaymentStatus, bene
         payment_option: null,
         total_paid: null,
     });
+
+    useEffect(() => {
+        if (did && data.did !== did) {
+            setData(prevData => ({
+                ...prevData,
+                did: Number(did),  // Ensure the value is always a number
+            }));
+        }
+    }, [did, data.did]);
+
+    useEffect(() => {
+        if (bid && data.bid !== bid) {
+            setData(prevData => ({
+                ...prevData,
+                bid: Number(bid),  // Ensure the value is always a number
+            }));
+        }
+    }, [bid, data.bid]);
+
+    useEffect(() => {
+        if (pid && data.pid !== pid) {
+            setData(prevData => ({
+                ...prevData,
+                pid: Number(pid),  // Ensure the value is always a number
+            }));
+        }
+    }, [pid, data.pid]);
+
+
     const submit = (e) => {
         e.preventDefault();
 
@@ -50,7 +79,7 @@ export default function Index({ auth, donors, beneficiaries, PaymentStatus, bene
 
     const handleBeneficiaryChange = (e) => {
         const selectedBid = e;
-        setData({ ...data, bid: selectedBid });
+        setData(prevData => ({ ...prevData, bid: selectedBid }));
 
         if (selectedBid) {
             router.get(route("payments.create", { bid: selectedBid }), {}, {
@@ -58,13 +87,23 @@ export default function Index({ auth, donors, beneficiaries, PaymentStatus, bene
                 preserveScroll: true,
                 onSuccess: (response) => {
                     setPrograms(response.props.programs);
+                    // Ensure program is shown when beneficiary is selected
                     setShowProgram(true);
+                    console.log("Programs:", response.props.programs);  // Check if programs are being set
                 },
             });
         } else {
-            setShowProgram(false);
+            setShowProgram(false); // Hide program if no beneficiary is selected
         }
     };
+    useEffect(() => {
+        if (data.bid) {
+            setShowProgram(true);  // Show program dropdown when a beneficiary is selected
+        } else {
+            setShowProgram(false);  // Hide program dropdown if no beneficiary is selected
+        }
+    }, [data.bid]);  // Watch for changes in 'bid'
+
     useEffect(() => {
         if (beneficiaryRecord) {
             setData((prevData) => ({
@@ -74,6 +113,7 @@ export default function Index({ auth, donors, beneficiaries, PaymentStatus, bene
             }));
         }
     }, [beneficiaryRecord]);
+    console.log(data.did)
     return (
         <AuthenticatedLayout auth={auth}>
             <Head title="Payment" />
@@ -127,6 +167,7 @@ export default function Index({ auth, donors, beneficiaries, PaymentStatus, bene
                                 <InputError className="mt-2" message={errors.bid} />
                             </div>
                         )}
+
                         {showProgram && (
                             <div className="lg:col-span-6 sm:col-span-6 col-span-12">
                                 <InputLabel htmlFor="pid" value="Program" />
@@ -148,11 +189,10 @@ export default function Index({ auth, donors, beneficiaries, PaymentStatus, bene
                                     options={beneficiaryProgram}
                                     className="mt-1 block w-full"
                                 />
-
                                 <InputError className="mt-2" message={errors.pid} />
                             </div>
-
                         )}
+
                         {data.pid && (
                             <>
 

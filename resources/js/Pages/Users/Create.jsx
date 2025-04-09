@@ -176,7 +176,7 @@ export default function Index({ auth, roles, MaritalStatus, patientGender, benef
                                         onChange={(e) => setData('guardian_contact_no', e.target.value)}
                                         isFocused
                                         autoComplete="guardian_contact_no"
-                                        type="text"
+                                        type="number"
                                     />
                                     <InputError className="mt-2" message={errors.guardian_contact_no} />
                                 </div>

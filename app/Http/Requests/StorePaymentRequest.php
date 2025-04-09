@@ -23,7 +23,6 @@ class StorePaymentRequest extends FormRequest
      */
     public function rules()
     {
-        // dd($this->all());
         if ($this->payment_option === "DepositDonor") {
             return [
                 'did' => ['required', 'exists:users,id'],

@@ -7,9 +7,12 @@ use App\Http\Requests\StoreBeneficiaryRequest;
 use App\Http\Requests\UpdateBeneficiaryApplicationRequest;
 use App\Models\Beneficiary;
 use App\Models\Institution;
+use App\Models\Payment;
 use App\Models\Program;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
@@ -43,7 +46,30 @@ class BeneficiarysApplicationsController extends Controller
         return Inertia::render('BeneficiarysApplications/Index', compact('beneficiaries', 'statuses', 'programs', 'performance'));
     }
 
+    public function ApplicationRequest()
+    {
+        $beneficiaries = Beneficiary::where('status', 'Request')->with('program', 'donor')->paginate(10);
+        $programs = Program::get()->map(fn($program) => [
+            'label' => $program->name,
+            'value' => (string) $program->id,
+        ])->toArray();
 
+        $statuses = [
+            ["label" => "Request", "value" => "Request"],
+            ["label" => "Approved", "value" => "Approved"],
+            ["label" => "Pending Approval", "value" => "Pending Approval"],
+            ["label" => "Cancelled", "value" => "Cancelled"],
+        ];
+
+        $performance = [
+            ["label" => "Excellent", "value" => "Excellent"],
+            ["label" => "Good", "value" => "Good"],
+            ["label" => "Average", "value" => "Average"],
+            ["label" => "Below Average", "value" => "Below Average"],
+            ["label" => "Poor", "value" => "Poor"],
+        ];
+        return Inertia::render('BeneficiarysApplications/Request', compact('beneficiaries', 'programs', 'statuses', 'performance'));
+    }
 
 
 
@@ -146,6 +172,29 @@ class BeneficiarysApplicationsController extends Controller
                 'error' => 'This beneficiary already exists for the given program.',
             ]);
         }
+        $data = $request->all();
+        $lastPayment = DB::table('donor_payments')->where('did', $data['did'])->orderBy('id', 'desc')->first();
+
+        $donorBalance = $lastPayment ? $lastPayment->total_paid : 0;
+
+        if ($donorBalance < $data['approved_amount']) {
+            return redirect()->back()->with([
+                'error' => 'Insufficient funds! The donor does not have enough balance for this payment.'
+            ]);
+        }
+        $newBalance = $donorBalance - $data['approved_amount'];
+        DB::table('donor_payments')->where('did', $data['did'])->update(['total_paid' => $newBalance]);
+
+        $payment = Payment::create([
+            'did' => $request->did,
+            'bid' => $request->uid,
+            'pid' => $request->pid,
+            'amount_requested' => $request->total_fee,
+            'amount_paid' => $request->approved_amount,
+            'status' => 'Approved',
+            'created_by' => Auth::id(),
+            'date' => Carbon::now()->format('Y-m-d'),
+        ]);
         $beneficiary = Beneficiary::where('uid', $request->uid)
             ->whereNull('pid')
             ->first();
@@ -210,10 +259,10 @@ class BeneficiarysApplicationsController extends Controller
     }
     public function Show($id)
     {
-        $beneficiaries = Beneficiary::with('performances', 'institute')->find($id);
+        $beneficiaries = Beneficiary::with('performances', 'institute','program','donor')->find($id);
         return Inertia::render('BeneficiarysApplications/Show', compact('beneficiaries'));
     }
-   
+
 
     public function update(UpdateBeneficiaryApplicationRequest $request, $id)
     {

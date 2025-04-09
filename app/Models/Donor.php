@@ -20,4 +20,8 @@ class Donor extends Model
     {
         return $this->belongsTo(User::class, 'uid');
     }
+    public function payments()
+    {
+        return $this->hasMany(Payment::class, 'did', 'uid');
+    }
 }

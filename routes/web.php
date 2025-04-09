@@ -26,15 +26,17 @@ use Illuminate\Support\Facades\Schema;
 |
 */
 
+// Route::get('/', function () {
+//     return Inertia::render('Welcome', [
+//         'canLogin' => Route::has('login'),
+//         'canRegister' => Route::has('register'),
+//         'laravelVersion' => Application::VERSION,
+//         'phpVersion' => PHP_VERSION,
+//     ]);
+// });
 Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
+    return redirect()->route('login');
 });
-
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
@@ -45,12 +47,16 @@ Route::middleware('auth')->group(function () {
     Route::resource('users', UserController::class);
     Route::resource('institutions', InstitutionController::class);
     Route::resource('beneficiary-performances', BeneficiaryPerformanceController::class);
+    Route::post('beneficiary-performances-image', [BeneficiaryPerformanceController::class,"UpdateImg"])->name('performanceimg');
     Route::resource('beneficiarys-applications', BeneficiarysApplicationsController::class);
+    Route::get('beneficiarys-applications-request', [BeneficiarysApplicationsController::class, 'ApplicationRequest'])->name('applicationrequest');
     Route::resource('payments', PaymentController::class);
+    Route::get('payments-request', [PaymentController::class, 'PaymentRequest'])->name('paymentrequest');
     Route::resource('donors', DonorController::class);
     Route::resource('beneficiaries', BeneficiaryController::class);
     Route::post('beneficiaryimageupload', [BeneficiaryController::class, 'uploadImage'])->name('beneficiaryimageupload');
     Route::post('paymentimageupload', [PaymentController::class, 'PaymentUploadImage'])->name('paymentimageupload');
+    Route::get('donor-deposite', [PaymentController::class, 'DonorDeposite'])->name('donordeposite');
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');

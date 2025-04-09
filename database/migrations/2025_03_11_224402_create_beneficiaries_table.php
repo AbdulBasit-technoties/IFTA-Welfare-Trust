@@ -38,7 +38,6 @@ return new class extends Migration
             $table->enum('gender', ['Male', 'Female', 'Other'])->nullable();
             $table->text('description')->nullable();
             $table->text('disability')->nullable();
-            $table->string('institute_name')->nullable();
             $table->string('class')->nullable();
             $table->decimal('total_fee', 10, 2)->nullable();
             $table->decimal('approved_amount', 10, 2)->nullable();

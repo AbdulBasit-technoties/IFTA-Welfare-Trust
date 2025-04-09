@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreBeneficiaryPerformanceRequest extends FormRequest
+class UpdateBeneficiaryPerformanceRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -13,7 +13,7 @@ class StoreBeneficiaryPerformanceRequest extends FormRequest
      */
     public function authorize()
     {
-        return auth()->user()->can('beneficiary-performances.create');
+        return auth()->user()->can('beneficiary-performances.update');
     }
 
     /**
@@ -28,7 +28,6 @@ class StoreBeneficiaryPerformanceRequest extends FormRequest
             'institute_id' => 'required|exists:institutions,id',
             'performance' => 'required|in:Excellent,Good,Average,Below Average,Poor',
             'comment' => 'nullable|string|max:500',
-            'performance_photo' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ];
     }
 }

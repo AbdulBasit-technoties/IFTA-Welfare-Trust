@@ -6,7 +6,7 @@ export default function SidebarLink({ active = false, className = '', children, 
             {...props}
             className={
                 `flex items-center justify-between p-2 text-primary transition-all duration-500 rounded-sm group ` +
-                (active ? 'dark:bg-secondary bg-orange/80' : '') +
+                (active ? '' : '') +
                 className
             }
         >

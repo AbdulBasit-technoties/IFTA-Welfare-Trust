@@ -1,177 +1,316 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-import { Head } from "@inertiajs/react";
-import jsPDF from "jspdf";
-import autoTable from "jspdf-autotable";
-
-export default function Show({ auth, beneficiaries }) {
-    
-    const generatePDF = () => {
-        const doc = new jsPDF("p", "mm", "a4");
-
-        // Title
-        doc.setFont("helvetica", "bold");
-        doc.setFontSize(18);
-        doc.text("Performance", 14, 20);
-
-        // Subtitle
-        doc.setFontSize(12);
-        doc.setFont("helvetica", "normal");
-        doc.text("Review your latest performance details.", 14, 28);
-
-        // Beneficiary Info Table
-        const beneficiaryData = [
-            ["Beneficiary Name", beneficiaries.beneficiary_name, "Beneficiary Email", beneficiaries.email],
-            ["Beneficiary Phone", beneficiaries.beneficiary_contact_no, "Guardian Name", beneficiaries.guardian_name],
-            ["Institute Type", beneficiaries.institute.type, "Institute Name", beneficiaries.institute.name]
-        ];
-
-        autoTable(doc, {
-            startY: 35,
-            head: [],
-            body: beneficiaryData,
-            theme: "grid",
-            styles: { fontSize: 10, cellPadding: 4, valign: "middle" },
-            columnStyles: { 0: { fontStyle: "bold", cellWidth: 40 }, 2: { fontStyle: "bold", cellWidth: 40 } },
-        });
-
-        let startY = doc.lastAutoTable.finalY + 10;
-
-        // Performance Details
-        beneficiaries.performances.forEach((performance, index) => {
-            const createdAt = new Date(performance.created_at);
-            const formattedDate = createdAt.toLocaleDateString("en-GB", {
-                day: "2-digit",
-                month: "2-digit",
-                year: "2-digit",
-            }).replace(/,/g, "");
-
-            const formattedMonth = createdAt.toLocaleDateString("en-US", { month: "long" });
-
-            autoTable(doc, {
-                startY,
-                body: [
-                    [
-                        { content: "Performance", styles: { fontStyle: "bold", halign: "left" } },
-                        performance.performance,
-                        { content: "Month", styles: { fontStyle: "bold", halign: "left" } },
-                        formattedMonth,
-                        { content: "Date", styles: { fontStyle: "bold", halign: "left" } },
-                        formattedDate
-                    ],
-                    [
-                        { content: "Comment", styles: { fontStyle: "bold", halign: "left", valign: "top", cellPadding: 4 } },
-                        { 
-                            content: performance.comment.trim(),
-                            colSpan: 5,
-                            styles: { halign: "left", cellPadding: 4, lineHeight: 1.5, fontSize: 10 } 
-                        }
-                    ]
-                ],
-                theme: "grid",
-                styles: { fontSize: 10, cellPadding: 4, valign: "middle" },
-                columnStyles: {
-                    0: { fontStyle: "bold", cellWidth: 35, valign: "top" }, // Performance column ki width badhayi
-                    1: { cellWidth: 50, whiteSpace: 'nowrap' }, // Performance value zyada width le sakti hai
-                    2: { fontStyle: "bold", cellWidth: 25 },
-                    3: { cellWidth: 30, whiteSpace: 'nowrap' }, // Month ki width bhi fix ki
-                    4: { fontStyle: "bold", cellWidth: 25 },
-                    5: { cellWidth: 30, whiteSpace: 'nowrap' }, // Date ki width bhi fix ki
-                },
-                margin: { left: 14, right: 14 },
-            });
-            
-
-            startY = doc.lastAutoTable.finalY + 10;
-        });
-
-        // Save the PDF
-        doc.save("performance_report.pdf");
-    };
-
+import { Head} from "@inertiajs/react";
+export default function Index({ auth, beneficiaries }) {
+    const FeesTime = [
+        { label: "Month", value: "month" },
+        { label: "6 Months", value: "6_month" },
+        { label: "Yearly", value: "yearly" },
+    ];
     return (
         <AuthenticatedLayout auth={auth}>
-            <Head title="Performance" />
-            <div className="py-24" id="performance">
-                <div className="flex font-semibold justify-center leading-tight mb-6 pt-8 text-gray-800 text-xl">
-                    <div className="flex justify-center w-full">
-                        <div className="xl:w-1/2 md:w-2/3 w-full bg-white shadow-lg rounded-lg">
-                            <div className="px-8 py-6 border-b">
-                                <h2 className="text-2xl font-bold">Performance</h2>
-                                <p className="text-sm text-gray-600">Review your latest performance details.</p>
-                            </div>
-                            <div className="px-8 py-6 grid grid-cols-1 gap-6">
-                                <div className="grid xl:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4">
-                                    <div className="space-y-1">
-                                        <div className="text-sm font-medium text-gray-600">Beneficiary Name</div>
-                                        <div className="text-lg font-medium">{beneficiaries.beneficiary_name}</div>
-                                    </div>
-                                    <div className="space-y-1">
-                                        <div className="text-sm font-medium text-gray-600">Beneficiary Email</div>
-                                        <div className="text-lg font-medium">{beneficiaries.email}</div>
-                                    </div>
-                                    <div className="space-y-1">
-                                        <div className="text-sm font-medium text-gray-600">Guardian Name</div>
-                                        <div className="text-lg font-medium">{beneficiaries.guardian_name}</div>
-                                    </div>
-                                    <div className="space-y-1">
-                                        <div className="text-sm font-medium text-gray-600">Beneficiary Phone</div>
-                                        <div className="text-lg font-medium">{beneficiaries.beneficiary_contact_no}</div>
-                                    </div>
-                                    <div className="space-y-1">
-                                        <div className="text-sm font-medium text-gray-600">Institute Type</div>
-                                        <div className="text-lg font-medium">{beneficiaries.institute.type}</div>
-                                    </div>
-                                    <div className="space-y-1">
-                                        <div className="text-sm font-medium text-gray-600">Institute Name</div>
-                                        <div className="text-lg font-medium ">{beneficiaries.institute.name}</div>
-                                    </div>
-                                </div>
-                                <div className="grid grid-cols-1 gap-4">
-                                    {beneficiaries.performances.map((performance, index) => {
-                                        const createdAt = new Date(performance.created_at);
-                                        const formattedDate = createdAt.toLocaleDateString("en-GB", {
-                                            day: "2-digit",
-                                            month: "2-digit",
-                                            year: "2-digit",
-                                        }).replace(/,/g, "");
+            <Head title="Application Detail" />
+            <div className="px-10 py-20">
+                <div className="grid grid-cols-12 gap-5">
+                    <div className={`${beneficiaries?.program?.name === "Ration" ? "col-span-4" : "2xl:col-span-6 lg:col-span-6 col-span-12"} mt-3`}>
+                        <div className="flex font-semibold items-center leading-tight text-primary text-xl justify-between mb-4 md:pe-4">
+                            <h2>Beneficiary Detail</h2>
+                        </div>
+                        <div className="rounded-xl overflow-x-auto">
+                            <table className="table table-xs w-full table-main table-auto">
+                                <thead className="bg-white text-gray-800">
+                                    <tr className="border-b-gray-300 border">
+                                        <th className="py-3 px-4">Name</th>
+                                        <td className="text-sm whitespace-nowrap font-light">{beneficiaries.beneficiary_name}</td>
+                                    </tr>
+                                    <tr className="border-b-gray-300 border">
+                                        <th className="py-3 px-4">Guardian Name</th>
+                                        <td className="text-sm whitespace-nowrap font-light">{beneficiaries.guardian_name}</td>
+                                    </tr>
+                                    <tr className="border-b-gray-300 border">
+                                        <th className="py-3 px-4">Email</th>
+                                        <td className="text-sm whitespace-nowrap font-light">{beneficiaries.email}</td>
+                                    </tr>
+                                    <tr className="border-b-gray-300 border">
+                                        <th className="py-3 px-4">Phone</th>
+                                        <td className="text-sm whitespace-nowrap font-light">{beneficiaries.beneficiary_contact_no}</td>
+                                    </tr>
+                                    <tr className="border-b-gray-300 border">
+                                        <th className="py-3 px-4">CNIC</th>
+                                        <td className="text-sm whitespace-nowrap font-light">{beneficiaries.beneficiary_cnic}</td>
+                                    </tr>
+                                    <tr className="border-b-gray-300 border">
+                                        <th className="py-3 px-4">Guardian CNIC</th>
+                                        <td className="text-sm whitespace-nowrap font-light">{beneficiaries.guardian_cnic}</td>
+                                    </tr>
+                                    <tr className="border-b-gray-300 border">
+                                        <th className="py-3 px-4">Address</th>
+                                        <td className="text-sm whitespace-nowrap font-light">{beneficiaries.address}</td>
+                                    </tr>
+                                    <tr className="border-b-gray-300 border">
+                                        <th className="py-3 px-4">Guardian Contact No</th>
+                                        <td className="text-sm whitespace-nowrap font-light">{beneficiaries.guardian_contact_no}</td>
+                                    </tr>
+                                    <tr className="border-b-gray-300 border">
+                                        <th className="py-3 px-4">Occupation</th>
+                                        <td className="text-sm whitespace-nowrap font-light">{beneficiaries.occupation}</td>
+                                    </tr>
+                                    <tr className="border-b-gray-300 border">
+                                        <th className="py-3 px-4">Household Income</th>
+                                        <td className="text-sm whitespace-nowrap font-light">{beneficiaries.household_income}</td>
+                                    </tr>
+                                    <tr className="border-b-gray-300 border">
+                                        <th className="py-3 px-4">Syed</th>
+                                        <td className="text-sm whitespace-nowrap font-light">{beneficiaries.syed === 1 ? 'Yes' : 'No'}</td>
+                                    </tr>
+                                    <tr className="border-b-gray-300 border">
+                                        <th className="py-3 px-4">Date of Birth</th>
+                                        <td className="text-sm whitespace-nowrap font-light">{beneficiaries.date_of_birth}</td>
+                                    </tr>
+                                    <tr className="border-b-gray-300 border">
+                                        <th className="py-3 px-4">Orphan</th>
+                                        <td className="text-sm whitespace-nowrap font-light">{beneficiaries.orphan === 1 ? 'Yes' : 'No'}</td>
+                                    </tr>
+                                    <tr className="border-b-gray-300 border">
+                                        <th className="py-3 px-4">Family Members</th>
+                                        <td className="text-sm whitespace-nowrap font-light">{beneficiaries.family_members}</td>
+                                    </tr>
+                                    <tr className="border-b-gray-300 border">
+                                        <th className="py-3 px-4">Sign</th>
+                                        <td className="text-sm whitespace-nowrap font-light">{beneficiaries.sign}</td>
+                                    </tr>
+                                    <tr className="border-b-gray-300 border">
+                                        <th className="py-3 px-4">Marital Status</th>
+                                        <td className="text-sm whitespace-nowrap font-light">{beneficiaries.marital_status}</td>
+                                    </tr>
+                                    <tr className="border-b-gray-300 border">
+                                        <th className="py-3 px-4">Gender</th>
+                                        <td className="text-sm whitespace-nowrap font-light">{beneficiaries.gender}</td>
+                                    </tr>
+                                    <tr className="border-b-gray-300 border">
+                                        <th className="py-3 px-4">Description</th>
+                                        <td className="text-sm whitespace-nowrap font-light">{beneficiaries.description}</td>
+                                    </tr>
+                                    <tr className="border-b-gray-300 border">
+                                        <th className="py-3 px-4">Disability</th>
+                                        <td className="text-sm whitespace-nowrap font-light">{beneficiaries.disability}</td>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                    <div className={`${beneficiaries?.program?.name === "Ration" ? "hidden" : "2xl:col-span-6 lg:col-span-6 col-span-12"} mt-3`}>
+                        <div className="flex font-semibold items-center leading-tight text-primary text-xl justify-between mb-4 md:pe-4">
+                            <h2>{beneficiaries?.program?.name === 'School' || beneficiaries?.program?.name === 'Higher Education' ? 'Education Information' : beneficiaries?.program?.name === 'Marriage' ? "Marriage Information" : beneficiaries?.program?.name === 'Patient' ? "Patient Information" : ""}</h2>
+                        </div>
+                        <div className="rounded-xl overflow-x-auto">
+                            <table className="table table-xs w-full table-main table-auto">
+                                <thead className="bg-white text-gray-800">
+                                    {((beneficiaries?.program?.name === "School") || (beneficiaries?.program?.name === "Higher Education")) && (
+                                        <>
+                                            <tr className="border-b-gray-300 border">
+                                                <th className="py-3 px-4">Education Type</th>
+                                                <td className="font-light text-sm whitespace-nowrap">{beneficiaries.education_type}</td>
+                                            </tr>
+                                            <tr className="border-b-gray-300 border">
+                                                <th className="py-3 px-4">Institute Name</th>
+                                                <td className="font-light text-sm whitespace-nowrap">{beneficiaries.institute.name}</td>
+                                            </tr>
+                                            <tr className="border-b-gray-300 border">
+                                                <th className="py-3 px-4">Fees Time</th>
+                                                <td className="font-light text-sm whitespace-nowrap">{FeesTime.find(item => item.value === beneficiaries.fees_time)?.label || "Unknown"}</td>
+                                            </tr>
+                                            <tr className="border-b-gray-300 border">
+                                                <th className="py-3 px-4">Institute NTN</th>
+                                                <td className="font-light text-sm whitespace-nowrap">{beneficiaries.institute_ntn}</td>
+                                            </tr>
+                                        </>
+                                    )}
+                                    {beneficiaries?.program?.name === "School" &&
+                                        <tr className="border-b-gray-300 border">
+                                            <th className="py-3 px-4">Class</th>
+                                            <td className="font-light text-sm whitespace-nowrap">{beneficiaries.class}</td>
+                                        </tr>
+                                    }
+                                    {beneficiaries?.program?.name === "Higher Education" &&
+                                        <>
+                                            <tr className="border-b-gray-300 border">
+                                                <th className="py-3 px-4">Degree Title</th>
+                                                <td className="font-light text-sm whitespace-nowrap">{beneficiaries.degree_title}</td>
+                                            </tr>
+                                            <tr className="border-b-gray-300 border">
+                                                <th className="py-3 px-4">Semester</th>
+                                                <td className="font-light text-sm whitespace-nowrap">{beneficiaries.semester}</td>
+                                            </tr>
+                                        </>
+                                    }
+                                    {((beneficiaries?.program?.name === "School") || (beneficiaries?.program?.name === "Higher Education")) && (
+                                        <>
+                                            <tr className="border-b-gray-300 border">
+                                                <th className="py-3 px-4">Total Fee</th>
+                                                <td className="font-light text-sm whitespace-nowrap">{beneficiaries.total_fee}</td>
+                                            </tr>
+                                            <tr className="border-b-gray-300 border">
+                                                <th className="py-3 px-4">Approved Amount</th>
+                                                <td className="font-light text-sm whitespace-nowrap">{beneficiaries.approved_amount}</td>
+                                            </tr>
+                                        </>
+                                    )}
+                                    {beneficiaries?.program?.name === "Patient"
+                                        &&
+                                        <>
+                                            <tr className="border-b-gray-300 border">
+                                                <th className="py-3 px-4">Hospital Name</th>
+                                                <td className="font-light text-sm whitespace-nowrap">{beneficiaries.hospital_name}</td>
+                                            </tr>
+                                            <tr className="border-b-gray-300 border">
+                                                <th className="py-3 px-4">Doctor Name</th>
+                                                <td className="font-light text-sm whitespace-nowrap">{beneficiaries.dr_name}</td>
+                                            </tr>
+                                            <tr className="border-b-gray-300 border">
+                                                <th className="py-3 px-4">Diseases/Injury</th>
+                                                <td className="font-light text-sm whitespace-nowrap">{beneficiaries.diseases_injury}</td>
+                                            </tr>
+                                            <tr className="border-b-gray-300 border">
+                                                <th className="py-3 px-4">Last Checkup Date</th>
+                                                <td className="font-light text-sm whitespace-nowrap">{beneficiaries.last_checkup_date}</td>
+                                            </tr>
+                                        </>}
+                                    {beneficiaries?.program?.name === "Marriage"
+                                        &&
+                                        <>
+                                            <tr className="border-b-gray-300 border">
+                                                <th className="py-3 px-4">Spouse Education</th>
+                                                <td className="font-light text-sm whitespace-nowrap">{beneficiaries.spouse_education}</td>
+                                            </tr>
+                                            <tr className="border-b-gray-300 border">
+                                                <th className="py-3 px-4">Spouse Age</th>
+                                                <td className="font-light text-sm whitespace-nowrap">{beneficiaries.spouse_age}</td>
+                                            </tr>
+                                            <tr className="border-b-gray-300 border">
+                                                <th className="py-3 px-4">No. of Guests Invited</th>
+                                                <td className="font-light text-sm whitespace-nowrap">{beneficiaries.no_of_guest_invited}</td>
+                                            </tr>
+                                            <tr className="border-b-gray-300 border">
+                                                <th className="py-3 px-4">Place of Marriage</th>
+                                                <td className="font-light text-sm whitespace-nowrap">{beneficiaries.place_of_marriage}</td>
+                                            </tr>
+                                            <tr className="border-b-gray-300 border">
+                                                <th className="py-3 px-4">Date of Marriage</th>
+                                                <td className="font-light text-sm whitespace-nowrap">{beneficiaries.date_of_marriage}</td>
+                                            </tr>
+                                        </>
+                                    }
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                    <div className={`${beneficiaries?.program?.name === "Ration" ? "col-span-4" : "2xl:col-span-6 lg:col-span-6 col-span-12"} mt-3`}>
+                        <div className="flex font-semibold items-center leading-tight text-primary text-xl justify-between mb-4 md:pe-4">
+                            <h2>Reference Detail</h2>
+                        </div>
+                        <div className="rounded-xl overflow-x-auto">
+                            <table className="table table-xs w-full table-main table-auto">
+                                <thead className="bg-white text-gray-800">
+                                    <tr className="border-b-gray-300 border">
+                                        <th className="py-3 px-4">Reference Name</th>
+                                        <td className="font-light text-sm whitespace-nowrap">{beneficiaries.reference_name}</td>
+                                    </tr>
+                                    <tr className="border-b-gray-300 border">
+                                        <th className="py-3 px-4">Reference Contact</th>
+                                        <td className="font-light text-sm whitespace-nowrap">{beneficiaries.reference_contact}</td>
+                                    </tr>
+                                    <tr className="border-b-gray-300 border">
+                                        <th className="py-3 px-4">Reference Relation</th>
+                                        <td className="font-light text-sm whitespace-nowrap">{beneficiaries.reference_relation}</td>
+                                    </tr>
 
-                                        const formattedMonth = createdAt.toLocaleDateString("en-US", { month: "long" });
-
-                                        return (
-                                            <div key={index} className="space-y-1 grid grid-cols-12 border-gray-300 p-3 border rounded-md">
-                                                <div className="flex gap-2 items-center xl:col-span-4 col-span-12">
-                                                    <div className="text-base font-bold text-gray-600">Performance</div>
-                                                    <div className="text-sm font-medium">{performance.performance}</div>
-                                                </div>
-                                                <div className="flex gap-2 items-center xl:col-span-4 col-span-12">
-                                                    <div className="text-base font-bold text-gray-600">Month</div>
-                                                    <div className="text-sm font-medium">{formattedMonth}</div>
-                                                </div>
-                                                <div className="flex gap-2 items-center xl:col-span-4 col-span-12">
-                                                    <div className="text-base font-bold text-gray-600">Date</div>
-                                                    <div className="text-sm font-medium">{formattedDate}</div>
-                                                </div>
-                                                <div className="col-span-12">
-                                                    <div className="text-base font-bold text-gray-600">Comment</div>
-                                                    <div className="text-sm font-medium">{performance.comment}</div>
-                                                </div>
-                                            </div>
-                                        );
-                                    })}
-                                </div>
-                            </div>
-                            <div className="flex justify-end px-8 py-4 border-t">
-                                <button
-                                    className="bg-gray-800 text-white px-4 py-2 rounded-md hover:bg-gray-700"
-                                    onClick={generatePDF}
-                                >
-                                    Download PDF
-                                </button>
-                            </div>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                    <div className={`${beneficiaries?.program?.name === "Ration" ? "col-span-4" : "2xl:col-span-6 lg:col-span-6 col-span-12"} mt-3`}>
+                        <div className="flex font-semibold items-center leading-tight text-primary text-xl justify-between mb-4 md:pe-4">
+                            <h2>Approval & Documents</h2>
+                        </div>
+                        <div className="rounded-xl overflow-x-auto">
+                            <table className="table table-xs w-full table-main table-auto">
+                                <thead className="bg-white text-gray-800">
+                                    <tr className="border-b-gray-300 border">
+                                        <th className="py-3 px-4">Approver Sign</th>
+                                        <td className="font-light text-sm whitespace-nowrap">{beneficiaries.approver_sign}</td>
+                                    </tr>
+                                    <tr className="border-b-gray-300 border">
+                                        <th className="py-3 px-4">Donor</th>
+                                        <td className="font-light text-sm whitespace-nowrap">{beneficiaries.donor.name}</td>
+                                    </tr>
+                                    <tr className="border-b-gray-300 border">
+                                        <th className="py-3 px-4">Approval Date</th>
+                                        <td className="font-light text-sm whitespace-nowrap">{beneficiaries.approval_date}</td>
+                                    </tr>
+                                    <tr className="border-b-gray-300 border">
+                                        <th className="py-3 px-4">Approved</th>
+                                        <td className="font-light text-sm whitespace-nowrap">{beneficiaries.approved === 1 ? "Yes" : "No"}</td>
+                                    </tr>
+                                    <tr className="border-b-gray-300 border">
+                                        <th className="py-3 px-4">Beneficiary CNIC Submitted</th>
+                                        <td className="font-light text-sm whitespace-nowrap">{beneficiaries.beneficiary_cnic_submitted === 1 ? "Yes" : "No"}</td>
+                                    </tr>
+                                    {((beneficiaries?.program?.name === "School") || (beneficiaries?.program?.name === "Higher Education")) && (
+                                        <>
+                                            <tr className="border-b-gray-300 border">
+                                                <th className="py-3 px-4">Application</th>
+                                                <td className="font-light text-sm whitespace-nowrap">{beneficiaries.application === 1 ? "Yes" : "No"}</td>
+                                            </tr>
+                                            <tr className="border-b-gray-300 border">
+                                                <th className="py-3 px-4">Approval Letter</th>
+                                                <td className="font-light text-sm whitespace-nowrap">{beneficiaries.approval_letter === 1 ? "Yes" : "No"}</td>
+                                            </tr>
+                                            <tr className="border-b-gray-300 border">
+                                                <th className="py-3 px-4">Fee Voucher</th>
+                                                <td className="font-light text-sm whitespace-nowrap">{beneficiaries.fee_voucher === 1 ? "Yes" : "No"}</td>
+                                            </tr>
+                                            <tr className="border-b-gray-300 border">
+                                                <th className="py-3 px-4">Bonafide Certificate</th>
+                                                <td className="font-light text-sm whitespace-nowrap">{beneficiaries.bonafide_certificate === 1 ? "Yes" : "No"}</td>
+                                            </tr>
+                                            <tr className="border-b-gray-300 border">
+                                                <th className="py-3 px-4">Guardian CNIC Submitted</th>
+                                                <td className="font-light text-sm whitespace-nowrap">{beneficiaries.guardian_cnic_submitted === 1 ? "Yes" : "No"}</td>
+                                            </tr>
+                                            <tr className="border-b-gray-300 border">
+                                                <th className="py-3 px-4">Paid Fee Voucher</th>
+                                                <td className="font-light text-sm whitespace-nowrap">{beneficiaries.paid_fee_voucher === 1 ? "Yes" : "No"}</td>
+                                            </tr>
+                                            <tr className="border-b-gray-300 border">
+                                                <th className="py-3 px-4">Institute NTN Submitted</th>
+                                                <td className="font-light text-sm whitespace-nowrap">{beneficiaries.institute_ntn_submitted === 1 ? "Yes" : "No"}</td>
+                                            </tr>
+                                        </>
+                                    )}
+                                    {beneficiaries?.program?.name === "Marriage" &&
+                                        <tr className="border-b-gray-300 border">
+                                            <th className="py-3 px-4">Marriage Invitation</th>
+                                            <td className="font-light text-sm whitespace-nowrap">{beneficiaries.marriage_invitation === 1 ? "Yes" : "No"}</td>
+                                        </tr>
+                                    }
+                                    {beneficiaries?.program?.name === "Ration" &&
+                                        <tr className="border-b-gray-300 border">
+                                            <th className="py-3 px-4">Last Utility Bill</th>
+                                            <td className="font-light text-sm whitespace-nowrap">{beneficiaries.last_utility_bill === 1 ? "Yes" : "No"}</td>
+                                        </tr>
+                                    }
+                                    {beneficiaries?.program?.name === "Patient" &&
+                                        <tr className="border-b-gray-300 border">
+                                            <th className="py-3 px-4">Prescription</th>
+                                            <td className="font-light text-sm whitespace-nowrap">{beneficiaries.prescription === 1 ? "Yes" : "No"}</td>
+                                        </tr>
+                                    }
+                                </thead>
+                            </table>
                         </div>
                     </div>
                 </div>
             </div>
-        </AuthenticatedLayout>
+        </AuthenticatedLayout >
     );
 }

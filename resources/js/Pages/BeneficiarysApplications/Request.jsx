@@ -11,7 +11,6 @@ import TextArea from "@/Components/TextArea";
 import InputError from "@/Components/InputError";
 import SelectComponent from "@/Components/SelectComponent";
 import { useEffect } from "react";
-import TextInput from "@/Components/TextInput";
 
 export default function Index({ auth, beneficiaries, statuses, status, programs, programId, performance }) {
   const { setData, patch } = useForm({
@@ -127,7 +126,6 @@ export default function Index({ auth, beneficiaries, statuses, status, programs,
     institute_id: '',
     performance: '',
     comment: '',
-    performance_photo: ''
   });
 
 
@@ -141,10 +139,7 @@ export default function Index({ auth, beneficiaries, statuses, status, programs,
 
     post(route('beneficiary-performances.store'), {
       preserveScroll: true,
-      onSuccess: () => {
-        setPerformanceModalOpen(false);
-        reset();
-      },
+      onSuccess: () => setPerformanceModalOpen(false),
     });
   };
 
@@ -413,7 +408,7 @@ export default function Index({ auth, beneficiaries, statuses, status, programs,
           <div className="p-5 space-y-4">
             {/* Performance Details */}
             <h2 className="font-bold text-gray-800">Enter Beneficiary Performance Details</h2>
-            <form onSubmit={submitPerformance} className="space-y-4">
+            <form onSubmit={submitPerformance}>
               {/* Performance Select Box */}
               <div>
                 <InputLabel htmlFor="performance" value="Performance" />
@@ -422,24 +417,9 @@ export default function Index({ auth, beneficiaries, statuses, status, programs,
                   value={data.performance}
                   onChange={(e) => performanceSetData('performance', e)}
                   options={performance}
-                  className="mt-1 block w-full text-gray-800"
+                  className="mt-1 block w-full"
                 />
                 <InputError className="mt-2" message={errors.performance} />
-              </div>
-
-              <div>
-                <InputLabel htmlFor="performance_photo" value="Performance Image" />
-                <TextInput
-                  id="performance_photo"
-                  className="mt-1 block w-full"
-                  value={data.performance_photo || ''}
-                  onChange={(e) => performanceSetData({ ...data, performance_photo: e.target.files[0] })}
-                  required
-                  isFocused
-                  autoComplete="performance_photo"
-                  type="file"
-                />
-                <InputError className="mt-2" message={errors.performance_photo} />
               </div>
 
               {/* Comment Box */}
@@ -449,7 +429,7 @@ export default function Index({ auth, beneficiaries, statuses, status, programs,
                   id="comment"
                   value={data.comment || ''}
                   onChange={(e) => performanceSetData('comment', e.target.value)}
-                  className="mt-1 block w-full text-gray-800"
+                  className="mt-1 block w-full"
                 />
                 <InputError className="mt-2" message={errors.comment} />
               </div>

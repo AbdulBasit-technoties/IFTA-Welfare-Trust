@@ -66,8 +66,6 @@ class Beneficiary extends Model
         'approver_sign',
         'did',
         'approval_date',
-
-        // Documents Submitted
         'approval_letter',
         'application',
         'fee_voucher',
@@ -79,8 +77,6 @@ class Beneficiary extends Model
         'prescription',
         'last_utility_bill',
         'marriage_invitation',
-
-        // Additional Info
         'uid',
         'pid',
         'institute_id',
@@ -134,4 +130,9 @@ class Beneficiary extends Model
 
         return $query;
     }
+    public function payments()
+    {
+        return $this->hasMany(Payment::class, 'bid', 'uid');
+    }
+    
 }

@@ -19,9 +19,9 @@ class UserController extends Controller
 {
     public function index(Request $request)
     {
-        $role = $request->input('role'); // Role filter ko request se le rahe hain
+        $role = $request->input('role');
         $users = User::with(['roles', 'donor', 'accountant', 'hr', 'beneficiary', 'educationOfficer'])
-            ->filterByRole($role) // Ab model ke scope method ka use ho raha hai
+            ->filterByRole($role)
             ->paginate(10);
 
         return Inertia::render('Users/Index', compact('users', 'role'));

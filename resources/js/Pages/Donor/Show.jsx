@@ -9,7 +9,7 @@ import Modal from "@/Components/Modal";
 import InputLabel from "@/Components/InputLabel";
 import TextArea from "@/Components/TextArea";
 import { useState } from "react";
-export default function Index({ auth, donorData, beneficiaries, payments, paymentStatus }) {
+export default function Index({ auth, donorData, beneficiaries, payments, paymentStatus, AmountPaid, TotalDonateAmount, MonthlyAmount, YearlyAmount, LastAmountPaid }) {
     const { data, setData, patch } = useForm({
         status: '',
         comment: '',
@@ -68,17 +68,18 @@ export default function Index({ auth, donorData, beneficiaries, payments, paymen
                                 <ul className="text-gray-500 space-y-3 pl-1 pb-6">
                                     <li className="flex items-center gap-3"><FaRegUser />{donorData.name}</li>
                                     <li className="flex items-center gap-3"><AiOutlineMail />{donorData.email}</li>
-                                    <li className="flex items-center gap-3"><MdOutlinePhone />{donorData.donor?.phone ?? 'N/A'}</li>
-                                    <li className="flex items-center gap-3"><IoLocationOutline />{donorData.donor?.address ?? 'N/A'}</li>
+                                    <li className="flex items-center gap-3"><MdOutlinePhone />{donorData.phone ?? 'N/A'}</li>
+                                    <li className="flex items-center gap-3"><IoLocationOutline />{donorData.address ?? 'N/A'}</li>
                                 </ul>
                             </div>
                             <div className="left-side-item">
                                 <h3 className="font-bold text-lg mb-3">Other Information</h3>
                                 <ul className="text-gray-500 space-y-3 pl-1">
-                                    <li><span className="sm:w-1/2 w-full sm:font-normal font-bold inline-block">Language</span> English</li>
-                                    <li><span className="sm:w-1/2 w-full sm:font-normal font-bold inline-block">Currency</span> United States dollar</li>
-                                    <li><span className="sm:w-1/2 w-full sm:font-normal font-bold inline-block">Last Modified</span> 27 Sep 2023, 11:45 pm</li>
-                                    <li><span className="sm:w-1/2 w-full sm:font-normal font-bold inline-block">Source</span> Paid Campaign</li>
+                                    <li><span className="sm:w-1/2 w-full sm:font-normal font-bold inline-block">Total Paid Amount</span>Rs :{AmountPaid}</li>
+                                    <li><span className="sm:w-1/2 w-full sm:font-normal font-bold inline-block">Total Donate Amount</span>Rs :{TotalDonateAmount}</li>
+                                    <li><span className="sm:w-1/2 w-full sm:font-normal font-bold inline-block">Current Balance</span>Rs :{LastAmountPaid}</li>
+                                    <li><span className="sm:w-1/2 w-full sm:font-normal font-bold inline-block">Total Monthly Donate</span>Rs :{MonthlyAmount}</li>
+                                    <li><span className="sm:w-1/2 w-full sm:font-normal font-bold inline-block">Total Yearly Donate</span>Rs :{YearlyAmount}</li>
                                 </ul>
                             </div>
                         </div>
@@ -86,22 +87,16 @@ export default function Index({ auth, donorData, beneficiaries, payments, paymen
                     <div className="2xl:col-span-9 xl:col-span-8 col-span-12">
                         <div className="tabs-button bg-white rounded-lg">
                             <div className="tabs tabs-lift">
-                                <label className="tab">
+                                <label className="tab !text-black !bg-transparent">
                                     <input type="radio" name="my_tabs_4" defaultChecked />
-                                    <MdPerson className="text-lg" />
+                                    <FaRegUser className="text-sm" />
                                     Beneficiary
                                 </label>
-                                <div className="tab-content bg-base-100 border-base-300 p-6">
+                                <div className="tab-content bg-white border-base-300 p-6">
                                     <div className="flex sm:flex-row flex-col gap-3 sm:gap-0 font-semibold sm:items-center leading-tight text-primary text-xl sm:justify-between mb-4 md:px-4">
                                         <h2>Beneficiary</h2>
                                         <div className="text-primary md:text-sm text-xs flex sm:items-center gap-5 sm:flex-row flex-col">
                                             Per page {beneficiaries.total}/{beneficiaries.to || beneficiaries.length}
-                                            <Link
-                                                href={route('users.create')}
-                                                className="inline-flex items-center w-max sm:w-auto px-4 py-2 bg-primary border border-transparent rounded-2xl text-xs text-white capitalize tracking-widest hover:border-primary hover:bg-transparent hover:text-primary transition-all duration-500"
-                                            >
-                                                Add Beneficiary
-                                            </Link>
                                         </div>
                                     </div>
                                     <div className="rounded-xl overflow-x-auto border-2 border-gray-200">
@@ -155,12 +150,12 @@ export default function Index({ auth, donorData, beneficiaries, payments, paymen
                                     )}
                                 </div>
 
-                                <label className="tab">
+                                <label className="tab !text-black !bg-transparent">
                                     <input type="radio" name="my_tabs_4" />
-                                    <BiWallet className="text-lg text-primary" />
+                                    <BiWallet className="text-sm text-primary" />
                                     Payments
                                 </label>
-                                <div className="tab-content bg-base-100 border-base-300 p-6">
+                                <div className="tab-content bg-white border-base-300 p-6">
                                     <div className="flex sm:flex-row flex-col gap-3 sm:gap-0 font-semibold sm:items-center leading-tight text-primary text-xl sm:justify-between mb-4 md:px-4">
                                         <h2>Payments</h2>
                                         <div className="text-primary md:text-sm text-xs flex sm:items-center gap-5 sm:flex-row flex-col">

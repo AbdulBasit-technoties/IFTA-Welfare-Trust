@@ -5,7 +5,7 @@ import NavLink from '@/Components/NavLink';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink';
 import { Link, router, usePage } from '@inertiajs/react';
 import { ToastContainer, toast } from 'react-toastify';
-import { FaChevronDown, FaMoneyBillWave, FaUser, FaUserShield } from "react-icons/fa";
+import { FaChartLine, FaChevronDown, FaHandHoldingHeart, FaMoneyBillWave, FaUser, FaUsers, FaUserShield } from "react-icons/fa";
 import SidebarLink from '@/Components/SidebarLink';
 import { FaBarsStaggered } from "react-icons/fa6";
 import usePermissions from '@/Hooks/usePermissions';
@@ -70,7 +70,7 @@ export default function Authenticated({ auth, header, children }) {
             <nav className="dark:bg-primary bg-secondary fixed top-0 w-full left-0 z-50">
                 <div className="md:px-4 px-2">
                     <div className="flex justify-between h-16 items-center">
-                        <div className="flex items-center gap-5">
+                        <div className="flex items-center justify-between w-[19%]">
                             <Link href="/">
                                 <ApplicationLogo />
                             </Link>
@@ -126,14 +126,14 @@ export default function Authenticated({ auth, header, children }) {
             {/* Main Layout */}
             <main className="">
                 <ToastContainer />
-                <div className="grid grid-cols-12 transition-all duration-500">
+                <div className="flex flex-wrap transition-all duration-500">
                     {isDrawerOpen && (
-                        <div className={`${isDrawerOpen ? 'absolute z-10 left-0 lg:w-full sm:w-1/2 w-10/12' : ''} overflow-y-auto xl:col-span-2 lg:col-span-3 lg:block  bg-secondary dark:bg-primary h-screen p-4 pt-20 lg:sticky lg:top-0`}>
+                        <div className={`${isDrawerOpen ? 'absolute z-10 left-0 xl:w-1/5 lg:w-1/4 sm:w-1/2 w-10/12' : ''} overflow-y-auto lg:block  bg-secondary dark:bg-primary h-screen p-4 pt-20 lg:sticky lg:top-0`}>
                             <ul className="space-y-4">
                                 <li className='group'>
                                     <SidebarLink href={route('dashboard')} active={route().current('dashboard')}>
-                                        <span className={`ml-3 font-bold text-lg flex items-center gap-1 transition-all duration-500 
-                                    ${route().current('dashboard') ? 'dark:text-primary text-secondary' : 'dark:text-secondary text-primary group-hover:text-orange'}`}>
+                                        <span className={`font-bold 2xl:text-[16px] text-[14px] flex items-center gap-1 transition-all duration-500 
+                                    ${route().current('dashboard') ? 'text-orange' : 'dark:text-secondary text-primary group-hover:text-orange'}`}>
                                             <MdSpaceDashboard /> Dashboard
                                         </span>
                                     </SidebarLink>
@@ -146,47 +146,116 @@ export default function Authenticated({ auth, header, children }) {
                                         <div
                                             className={`flex group items-center justify-between p-2 mb-2 rounded-sm cursor-pointer 
             dark:text-secondary text-primary  
-            ${['beneficiarys-applications.index', 'beneficiarys-applications.create', 'beneficiarys-applications.edit'].some(routeName => route().current(routeName)) || isSubNavOpen === 'beneficiarys-applications'
-                                                    ? 'dark:bg-secondary bg-orange/80 dark:text-primary text-secondary'
+            ${['beneficiarys-applications.index', 'beneficiarys-applications.create', 'applicationrequest', 'beneficiarys-applications.edit'].some(routeName => route().current(routeName)) || isSubNavOpen === 'beneficiarys-applications'
+                                                    ? ''
                                                     : ''}`}
                                             onClick={() => toggleSubNav('beneficiarys-applications')}
                                         >
-                                            <span className={`ml-3 flex gap-1 items-center font-bold text-lg group-hover:text-orange 
-                ${['beneficiarys-applications.index', 'beneficiarys-applications.create', 'beneficiarys-applications.edit'].some(routeName => route().current(routeName)) || isSubNavOpen === 'beneficiarys-applications'
-                                                    ? 'dark:text-primary text-secondary group-hover:text-primary group-hover:dark:text-orange'
+                                            <span className={`flex gap-1 items-center font-bold 2xl:text-[16px] text-[14px] group-hover:text-orange 
+                ${['beneficiarys-applications.index', 'beneficiarys-applications.create', 'applicationrequest', 'beneficiarys-applications.edit'].some(routeName => route().current(routeName)) || isSubNavOpen === 'beneficiarys-applications'
+                                                    ? 'text-orange group-hover:text-primary group-hover:dark:text-orange'
                                                     : 'dark:text-secondary text-primary'}`}>
-                                                <MdPerson /> Beneficiary Applications
+                                                <MdPerson /> Applications
                                             </span>
                                             <FaChevronDown
                                                 className={`transition-all duration-300 group-hover:text-orange
-                ${['beneficiarys-applications.index', 'beneficiarys-applications.create', 'beneficiarys-applications.edit'].some(routeName => route().current(routeName)) || isSubNavOpen === 'beneficiarys-applications'
-                                                        ? 'dark:text-primary text-secondary group-hover:text-primary group-hover:dark:text-orange'
+                ${['beneficiarys-applications.index', 'beneficiarys-applications.create', 'applicationrequest', 'beneficiarys-applications.edit'].some(routeName => route().current(routeName)) || isSubNavOpen === 'beneficiarys-applications'
+                                                        ? 'text-orange group-hover:text-primary group-hover:dark:text-orange'
                                                         : 'dark:text-secondary text-primary'}`}
                                             />
                                         </div>
 
                                         {isSubNavOpen === 'beneficiarys-applications' && (
-                                            <ul className="sub-navigation text-sm space-y-4">
+                                            <ul className="sub-navigation text-sm ps-2">
                                                 {can('beneficiarys-applications.index') && (
-                                                    <li className='ml-5 relative before:absolute before:w-[2px] before:-left-2 before:top-1 after:-left-[10px] before:h-2/5 after:absolute after:w-[8px] after:h-[8px] after:top-2/3 after:transform after:-translate-y-1/2 after:rounded-full after:bg-gray-800 after:dark:bg-orange before:bg-gray-800 before:dark:bg-orange'>
+                                                    <li className='ml-5 relative before:absolute before:w-[1px] before:-left-[8.6px] before:top-[10px] after:-left-[0.6rem] before:h-[8px] after:absolute after:w-[4px] after:h-[4px] after:top-[22px] after:transform after:-translate-y-1/2 after:rounded-full after:bg-gray-800 after:dark:bg-orange before:bg-gray-800 before:dark:bg-orange'>
                                                         <SidebarLink href={route('beneficiarys-applications.index')} active={route().current('beneficiarys-applications.index')}>
-                                                            <span className={`ml-3 font-bold text-lg transition-all duration-500 
+                                                            <span className={`font-bold 2xl:text-[16px] text-[14px] transition-all duration-500 
                                 ${route().current('beneficiarys-applications.index')
-                                                                    ? 'dark:text-primary text-secondary'
-                                                                    : 'dark:text-secondary text-primary group-hover:text-orange'}`}>
+                                                                    ? 'text-orange'
+                                                                    : 'dark:text-secondary/70 text-primary/70 group-hover:text-orange'}`}>
                                                                 All Applications
                                                             </span>
                                                         </SidebarLink>
                                                     </li>
                                                 )}
                                                 {can('beneficiarys-applications.create') && (
-                                                    <li className='ml-5 relative before:absolute before:w-[2px] before:-left-2 before:top-1 after:-left-[10px] before:h-2/5 after:absolute after:w-[8px] after:h-[8px] after:top-2/3 after:transform after:-translate-y-1/2 after:rounded-full after:bg-gray-800 after:dark:bg-orange before:bg-gray-800 before:dark:bg-orange'>
+                                                    <li className='ml-5 relative before:absolute before:w-[1px] before:-left-[8.6px] before:top-[10px] after:-left-[0.6rem] before:h-[8px] after:absolute after:w-[4px] after:h-[4px] after:top-[22px] after:transform after:-translate-y-1/2 after:rounded-full after:bg-gray-800 after:dark:bg-orange before:bg-gray-800 before:dark:bg-orange'>
                                                         <SidebarLink href={route('beneficiarys-applications.create')} active={route().current('beneficiarys-applications.create')}>
-                                                            <span className={`ml-3 font-bold text-lg transition-all duration-500 
+                                                            <span className={`font-bold 2xl:text-[16px] text-[14px] transition-all duration-500 
                                 ${route().current('beneficiarys-applications.create')
-                                                                    ? 'dark:text-primary text-secondary'
-                                                                    : 'dark:text-secondary text-primary group-hover:text-orange'}`}>
-                                                                Add New Application
+                                                                    ? 'text-orange'
+                                                                    : 'dark:text-secondary/70 text-primary/70 group-hover:text-orange'}`}>
+                                                                Add Application
+                                                            </span>
+                                                        </SidebarLink>
+                                                    </li>
+                                                )}
+                                                {can('beneficiarys-applications.index') && (
+                                                    <li className="ml-5 relative before:absolute before:w-[1px] before:-left-[8.6px] before:top-[10px] after:-left-[0.6rem] before:h-[8px] after:absolute after:w-[4px] after:h-[4px] after:top-[22px] after:transform after:-translate-y-1/2 after:rounded-full after:bg-gray-800 after:dark:bg-orange before:bg-gray-800 before:dark:bg-orange">
+                                                        <span className="absolute -top-2 -right-2 dark:bg-orange bg-primary text-white rounded-full w-5 h-5 text-xs flex items-center justify-center">
+                                                            {pendingBeneficiaryCount ?? 0}
+                                                        </span>
+                                                        <SidebarLink href={route('applicationrequest')} active={route().current('applicationrequest')}>
+                                                            <span className={`font-bold 2xl:text-[16px] text-[14px] transition-all duration-500 
+                                ${route().current('applicationrequest')
+                                                                    ? 'text-orange'
+                                                                    : 'dark:text-secondary/70 text-primary/70 group-hover:text-orange'}`}>
+                                                                Request
+                                                            </span>
+                                                        </SidebarLink>
+
+                                                    </li>
+                                                )}
+                                            </ul>
+                                        )}
+                                    </li>
+                                )}
+                                {can('beneficiaries.index') && (
+                                    <li className='relative'>
+                                        <div
+                                            className={`flex group items-center justify-between p-2 mb-2 rounded-sm cursor-pointer 
+                dark:text-secondary text-primary  
+                ${['beneficiaries.index', 'beneficiaries.create'].some(routeName => route().current(routeName)) || isSubNavOpen === 'beneficiaries'
+                                                    ? ''
+                                                    : ''}`}
+                                            onClick={() => toggleSubNav('beneficiaries')}
+                                        >
+                                            <span className={`flex items-center gap-1 font-bold 2xl:text-[16px] text-[14px] group-hover:text-orange 
+                ${['beneficiaries.index', 'beneficiaries.create'].some(routeName => route().current(routeName)) || isSubNavOpen === 'beneficiaries'
+                                                    ? 'text-orange group-hover:text-primary group-hover:dark:text-orange'
+                                                    : 'dark:text-secondary text-primary'}`}>
+                                                <FaUsers /> Beneficiaries
+                                            </span>
+                                            <FaChevronDown
+                                                className={`transition-all duration-300 group-hover:text-orange
+                ${['beneficiaries.index', 'beneficiaries.create'].some(routeName => route().current(routeName)) || isSubNavOpen === 'beneficiaries'
+                                                        ? 'text-orange group-hover:text-primary group-hover:dark:text-orange'
+                                                        : 'dark:text-secondary text-primary'}`}
+                                            />
+                                        </div>
+                                        {isSubNavOpen === 'beneficiaries' && (
+                                            <ul className="sub-navigation text-sm ps-2">
+                                                {can('beneficiaries.index') && (
+                                                    <li className='ml-5 relative before:absolute before:w-[1px] before:-left-[8.6px] before:top-[10px] after:-left-[0.6rem] before:h-[8px] after:absolute after:w-[4px] after:h-[4px] after:top-[22px] after:transform after:-translate-y-1/2 after:rounded-full after:bg-gray-800 after:dark:bg-orange before:bg-gray-800 before:dark:bg-orange'>
+                                                        <SidebarLink href={route('beneficiaries.index')} active={route().current('beneficiaries.index')}>
+                                                            <span className={`font-bold 2xl:text-[16px] text-[14px] transition-all duration-500 
+                                ${route().current('beneficiaries.index')
+                                                                    ? 'text-orange'
+                                                                    : 'dark:text-secondary/70 text-primary/70 group-hover:text-orange'}`}>
+                                                                All Beneficiaries
+                                                            </span>
+                                                        </SidebarLink>
+                                                    </li>
+                                                )}
+                                                {can('beneficiaries.create') && (
+                                                    <li className='ml-5 relative before:absolute before:w-[1px] before:-left-[8.6px] before:top-[10px] after:-left-[0.6rem] before:h-[8px] after:absolute after:w-[4px] after:h-[4px] after:top-[22px] after:transform after:-translate-y-1/2 after:rounded-full after:bg-gray-800 after:dark:bg-orange before:bg-gray-800 before:dark:bg-orange'>
+                                                        <SidebarLink href={route('beneficiaries.create')} active={route().current('beneficiaries.create')}>
+                                                            <span className={`font-bold 2xl:text-[16px] text-[14px] transition-all duration-500 
+                                ${route().current('beneficiaries.create')
+                                                                    ? 'text-orange'
+                                                                    : 'dark:text-secondary/70 text-primary/70 group-hover:text-orange'}`}>
+                                                                Add Beneficiary
                                                             </span>
                                                         </SidebarLink>
                                                     </li>
@@ -195,67 +264,57 @@ export default function Authenticated({ auth, header, children }) {
                                         )}
                                     </li>
                                 )}
-                                {can('beneficiarys-applications.index') && (
-                                    <li className="group relative">
-                                        <span className="absolute -top-2 -right-2 dark:bg-orange bg-primary text-white rounded-full w-5 h-5 text-xs flex items-center justify-center">
-                                            {pendingBeneficiaryCount ?? 0}
-                                        </span>
-                                        <SidebarLink
-                                            href={route('beneficiarys-applications.index', { status: 'Request' })}
-                                            active={route().current('beneficiarys-applications.index')}
-                                            onClick={(e) => {
-                                                e.preventDefault();
-                                                router.get(route('beneficiarys-applications.index', { status: 'Request' }));
-                                            }}
+                                {can('donors.index') && (
+                                    <li className='relative'>
+                                        <div
+                                            className={`flex group items-center justify-between p-2 mb-2 rounded-sm cursor-pointer 
+                dark:text-secondary text-primary  
+                ${['donors.index', 'donors.create'].some(routeName => route().current(routeName)) || isSubNavOpen === 'donors'
+                                                    ? ''
+                                                    : ''}`}
+                                            onClick={() => toggleSubNav('donors')}
                                         >
-                                            <span className={`ml-3 flex items-center gap-1 font-bold text-lg transition-all duration-500 
-                ${route().current('beneficiarys-applications.index')
-                                                    ? 'dark:text-primary text-secondary'
-                                                    : 'dark:text-secondary text-primary group-hover:text-orange'}`}
-                                            >
-                                                <MdPerson /> Beneficiary Request
+                                            <span className={`flex items-center gap-1 font-bold 2xl:text-[16px] text-[14px] group-hover:text-orange 
+                ${['donors.index', 'donors.create'].some(routeName => route().current(routeName)) || isSubNavOpen === 'donors'
+                                                    ? 'text-orange group-hover:text-primary group-hover:dark:text-orange'
+                                                    : 'dark:text-secondary text-primary'}`}>
+                                                <FaHandHoldingHeart /> Donors
                                             </span>
-                                        </SidebarLink>
-                                    </li>
-                                )}
-                                {can('users.index') && (
-                                    <li className="group relative">
-                                        <SidebarLink
-                                            href={route('users.index', { role: 'Beneficiary' })}
-                                            active={route().current('users.index')}
-                                            onClick={(e) => {
-                                                e.preventDefault();
-                                                router.get(route('users.index', { role: 'Beneficiary' }));
-                                            }}
-                                        >
-                                            <span className={`ml-3 flex items-center gap-1 font-bold text-lg transition-all duration-500 
-                ${route().current('users.index')
-                                                    ? 'dark:text-primary text-secondary'
-                                                    : 'dark:text-secondary text-primary group-hover:text-orange'}`}
-                                            >
-                                                <MdPerson /> Beneficiary
-                                            </span>
-                                        </SidebarLink>
-                                    </li>
-                                )}
-                                {can('users.index') && (
-                                    <li className="group relative">
-                                        <SidebarLink
-                                            href={route('users.index', { role: 'Donor' })}
-                                            active={route().current('users.index')}
-                                            onClick={(e) => {
-                                                e.preventDefault();
-                                                router.get(route('users.index', { role: 'Donor' }));
-                                            }}
-                                        >
-                                            <span className={`ml-3 flex items-center gap-1 font-bold text-lg transition-all duration-500 
-                ${route().current('users.index')
-                                                    ? 'dark:text-primary text-secondary'
-                                                    : 'dark:text-secondary text-primary group-hover:text-orange'}`}
-                                            >
-                                                <MdVolunteerActivism /> Donor
-                                            </span>
-                                        </SidebarLink>
+                                            <FaChevronDown
+                                                className={`transition-all duration-300 group-hover:text-orange
+                ${['donors.index', 'donors.create'].some(routeName => route().current(routeName)) || isSubNavOpen === 'donors'
+                                                        ? 'text-orange group-hover:text-primary group-hover:dark:text-orange'
+                                                        : 'dark:text-secondary text-primary'}`}
+                                            />
+                                        </div>
+                                        {isSubNavOpen === 'donors' && (
+                                            <ul className="sub-navigation text-sm ps-2">
+                                                {can('donors.index') && (
+                                                    <li className='ml-5 relative before:absolute before:w-[1px] before:-left-[8.6px] before:top-[10px] after:-left-[0.6rem] before:h-[8px] after:absolute after:w-[4px] after:h-[4px] after:top-[22px] after:transform after:-translate-y-1/2 after:rounded-full after:bg-gray-800 after:dark:bg-orange before:bg-gray-800 before:dark:bg-orange'>
+                                                        <SidebarLink href={route('donors.index')} active={route().current('donors.index')}>
+                                                            <span className={`font-bold 2xl:text-[16px] text-[14px] transition-all duration-500 
+                                ${route().current('donors.index')
+                                                                    ? 'text-orange'
+                                                                    : 'dark:text-secondary/70 text-primary/70 group-hover:text-orange'}`}>
+                                                                All Donors
+                                                            </span>
+                                                        </SidebarLink>
+                                                    </li>
+                                                )}
+                                                {can('donors.create') && (
+                                                    <li className='ml-5 relative before:absolute before:w-[1px] before:-left-[8.6px] before:top-[10px] after:-left-[0.6rem] before:h-[8px] after:absolute after:w-[4px] after:h-[4px] after:top-[22px] after:transform after:-translate-y-1/2 after:rounded-full after:bg-gray-800 after:dark:bg-orange before:bg-gray-800 before:dark:bg-orange'>
+                                                        <SidebarLink href={route('donors.create')} active={route().current('donors.create')}>
+                                                            <span className={`font-bold 2xl:text-[16px] text-[14px] transition-all duration-500 
+                                ${route().current('donors.create')
+                                                                    ? 'text-orange'
+                                                                    : 'dark:text-secondary/70 text-primary/70 group-hover:text-orange'}`}>
+                                                                Add Donor
+                                                            </span>
+                                                        </SidebarLink>
+                                                    </li>
+                                                )}
+                                            </ul>
+                                        )}
                                     </li>
                                 )}
                                 {can('payments.index') && (
@@ -268,46 +327,73 @@ export default function Authenticated({ auth, header, children }) {
                                         <div
                                             className={`flex group items-center justify-between p-2 mb-2 rounded-sm cursor-pointer 
         dark:text-secondary text-primary  
-        ${['payments.index', 'payments.create'].some(routeName => route().current(routeName)) || isSubNavOpen === 'payments'
-                                                    ? 'dark:bg-secondary bg-orange/80 dark:text-primary text-secondary'
+        ${['payments.index', 'paymentrequest', 'payments.create', 'donordeposite'].some(routeName => route().current(routeName)) || isSubNavOpen === 'payments'
+                                                    ? ''
                                                     : ''}`}
                                             onClick={() => toggleSubNav('payments')}
                                         >
-                                            <span className={`ml-3 flex items-center gap-1 font-bold text-lg group-hover:text-orange 
-            ${['payments.index', 'payments.create'].some(routeName => route().current(routeName)) || isSubNavOpen === 'payments'
-                                                    ? 'dark:text-primary text-secondary group-hover:text-primary group-hover:dark:text-orange'
+                                            <span className={`flex items-center gap-1 font-bold 2xl:text-[16px] text-[14px] group-hover:text-orange 
+            ${['payments.index', 'paymentrequest', 'payments.create', 'donordeposite'].some(routeName => route().current(routeName)) || isSubNavOpen === 'payments'
+                                                    ? 'text-orange group-hover:text-primary group-hover:dark:text-orange'
                                                     : 'dark:text-secondary text-primary'}`}>
                                                 <FaMoneyBillWave /> Payments
                                             </span>
                                             <FaChevronDown
                                                 className={`transition-all duration-300 group-hover:text-orange
-            ${['payments.index', 'payments.create'].some(routeName => route().current(routeName)) || isSubNavOpen === 'payments'
-                                                        ? 'dark:text-primary text-secondary group-hover:text-primary group-hover:dark:text-orange'
+            ${['payments.index', 'paymentrequest', 'payments.create', 'donordeposite'].some(routeName => route().current(routeName)) || isSubNavOpen === 'payments'
+                                                        ? 'text-orange group-hover:text-primary group-hover:dark:text-orange'
                                                         : 'dark:text-secondary text-primary'}`}
                                             />
                                         </div>
                                         {isSubNavOpen === 'payments' && (
-                                            <ul className="sub-navigation text-sm space-y-4">
+                                            <ul className="sub-navigation text-sm ps-2">
                                                 {can('payments.index') && (
-                                                    <li className='ml-5 relative before:absolute before:w-[2px] before:-left-2 before:top-1 after:-left-[10px] before:h-2/5 after:absolute after:w-[8px] after:h-[8px] after:top-2/3 after:transform after:-translate-y-1/2 after:rounded-full after:bg-gray-800 after:dark:bg-orange before:bg-gray-800 before:dark:bg-orange'>
+                                                    <li className='ml-5 relative before:absolute before:w-[1px] before:-left-[8.6px] before:top-[10px] after:-left-[0.6rem] before:h-[8px] after:absolute after:w-[4px] after:h-[4px] after:top-[22px] after:transform after:-translate-y-1/2 after:rounded-full after:bg-gray-800 after:dark:bg-orange before:bg-gray-800 before:dark:bg-orange'>
                                                         <SidebarLink href={route('payments.index')} active={route().current('payments.index')}>
-                                                            <span className={`ml-3 font-bold text-lg transition-all duration-500 
+                                                            <span className={`font-bold 2xl:text-[16px] text-[14px] transition-all duration-500 
                             ${route().current('payments.index')
-                                                                    ? 'dark:text-primary text-secondary'
-                                                                    : 'dark:text-secondary text-primary group-hover:text-orange'}`}>
+                                                                    ? 'text-orange'
+                                                                    : 'dark:text-secondary/70 text-primary/70 group-hover:text-orange'}`}>
                                                                 All Payments
                                                             </span>
                                                         </SidebarLink>
                                                     </li>
                                                 )}
                                                 {can('payments.create') && (
-                                                    <li className='ml-5 relative before:absolute before:w-[2px] before:-left-2 before:top-1 after:-left-[10px] before:h-2/5 after:absolute after:w-[8px] after:h-[8px] after:top-2/3 after:transform after:-translate-y-1/2 after:rounded-full after:bg-gray-800 after:dark:bg-orange before:bg-gray-800 before:dark:bg-orange'>
+                                                    <li className='ml-5 relative before:absolute before:w-[1px] before:-left-[8.6px] before:top-[10px] after:-left-[0.6rem] before:h-[8px] after:absolute after:w-[4px] after:h-[4px] after:top-[22px] after:transform after:-translate-y-1/2 after:rounded-full after:bg-gray-800 after:dark:bg-orange before:bg-gray-800 before:dark:bg-orange'>
                                                         <SidebarLink href={route('payments.create')} active={route().current('payments.create')}>
-                                                            <span className={`ml-3 font-bold text-lg transition-all duration-500 
+                                                            <span className={`font-bold 2xl:text-[16px] text-[14px] transition-all duration-500 
                             ${route().current('payments.create')
-                                                                    ? 'dark:text-primary text-secondary'
-                                                                    : 'dark:text-secondary text-primary group-hover:text-orange'}`}>
+                                                                    ? 'text-orange'
+                                                                    : 'dark:text-secondary/70 text-primary/70 group-hover:text-orange'}`}>
                                                                 Add Payment
+                                                            </span>
+                                                        </SidebarLink>
+                                                    </li>
+                                                )}
+                                                {can('payments.index') && (
+                                                    <li className='ml-5 relative before:absolute before:w-[1px] before:-left-[8.6px] before:top-[10px] after:-left-[0.6rem] before:h-[8px] after:absolute after:w-[4px] after:h-[4px] after:top-[22px] after:transform after:-translate-y-1/2 after:rounded-full after:bg-gray-800 after:dark:bg-orange before:bg-gray-800 before:dark:bg-orange'>
+                                                        <SidebarLink href={route('donordeposite')} active={route().current('donordeposite')}>
+                                                            <span className={`font-bold 2xl:text-[16px] text-[14px] transition-all duration-500 
+                            ${route().current('donordeposite')
+                                                                    ? 'text-orange'
+                                                                    : 'dark:text-secondary/70 text-primary/70 group-hover:text-orange'}`}>
+                                                                Donor Deposite
+                                                            </span>
+                                                        </SidebarLink>
+                                                    </li>
+                                                )}
+                                                {can('payments.index') && (
+                                                    <li className='ml-5 relative before:absolute before:w-[1px] before:-left-[8.6px] before:top-[10px] after:-left-[0.6rem] before:h-[8px] after:absolute after:w-[4px] after:h-[4px] after:top-[22px] after:transform after:-translate-y-1/2 after:rounded-full after:bg-gray-800 after:dark:bg-orange before:bg-gray-800 before:dark:bg-orange'>
+                                                        <span className="absolute -top-2 -right-2 dark:bg-orange bg-primary text-white rounded-full w-5 h-5 text-xs flex items-center justify-center">
+                                                            {pendingPaymentsCount ?? 0}
+                                                        </span>
+                                                        <SidebarLink href={route('paymentrequest')} active={route().current('paymentrequest')}>
+                                                            <span className={`font-bold 2xl:text-[16px] text-[14px] transition-all duration-500 
+                            ${route().current('paymentrequest')
+                                                                    ? 'text-orange'
+                                                                    : 'dark:text-secondary/70 text-primary/70 group-hover:text-orange'}`}>
+                                                                Request
                                                             </span>
                                                         </SidebarLink>
                                                     </li>
@@ -316,73 +402,106 @@ export default function Authenticated({ auth, header, children }) {
                                         )}
                                     </li>
                                 )}
-                                {can('payments.index') && (
-                                    <li className="group relative">
-                                        <span className="absolute -top-2 -right-2 dark:bg-orange bg-primary text-white rounded-full w-5 h-5 text-xs flex items-center justify-center">
-                                            {pendingPaymentsCount ?? 0}
-                                        </span>
-                                        <SidebarLink
-                                            href={route('payments.index', { status: 'Request' })}
-                                            active={route().current('payments.index')}
-                                            onClick={(e) => {
-                                                e.preventDefault();
-                                                router.get(route('payments.index', { status: 'Request' }));
-                                            }}
+                                {can('beneficiary-performances.index') && (
+                                    <li className='relative'>
+                                        <div
+                                            className={`flex group items-center justify-between p-2 mb-2 rounded-sm cursor-pointer 
+            dark:text-secondary text-primary  
+            ${['beneficiary-performances.index', 'beneficiary-performances.create'].some(routeName => route().current(routeName)) || isSubNavOpen === 'performances'
+                                                    ? ''
+                                                    : ''}`}
+                                            onClick={() => toggleSubNav('performances')}
                                         >
-                                            <span className={`ml-3 flex items-center gap-1 font-bold text-lg transition-all duration-500 
-                ${route().current('payments.index')
-                                                    ? 'dark:text-primary text-secondary'
-                                                    : 'dark:text-secondary text-primary group-hover:text-orange'}`}
-                                            >
-                                                <FaMoneyBillWave /> Payment Request
+                                            <span className={`flex items-center gap-1 font-bold 2xl:text-[16px] text-[14px] group-hover:text-orange 
+                ${['beneficiary-performances.index', 'beneficiary-performances.create'].some(routeName => route().current(routeName)) || isSubNavOpen === 'performances'
+                                                    ? 'text-orange group-hover:text-primary group-hover:dark:text-orange'
+                                                    : 'dark:text-secondary text-primary'}`}>
+                                                <FaChartLine /> Performances
                                             </span>
-                                        </SidebarLink>
+                                            <FaChevronDown
+                                                className={`transition-all duration-300 group-hover:text-orange
+                ${['beneficiary-performances.index', 'beneficiary-performances.create'].some(routeName => route().current(routeName)) || isSubNavOpen === 'performances'
+                                                        ? 'text-orange group-hover:text-primary group-hover:dark:text-orange'
+                                                        : 'dark:text-secondary text-primary'}`}
+                                            />
+                                        </div>
+
+                                        {isSubNavOpen === 'performances' && (
+                                            <ul className="sub-navigation text-sm ps-2">
+                                                {can('beneficiary-performances.index') && (
+                                                    <li className='ml-5 relative before:absolute before:w-[1px] before:-left-[8.6px] before:top-[10px] after:-left-[0.6rem] before:h-[8px] after:absolute after:w-[4px] after:h-[4px] after:top-[22px] after:transform after:-translate-y-1/2 after:rounded-full after:bg-gray-800 after:dark:bg-orange before:bg-gray-800 before:dark:bg-orange'>
+                                                        <SidebarLink href={route('beneficiary-performances.index')} active={route().current('beneficiary-performances.index')}>
+                                                            <span className={`font-bold 2xl:text-[16px] text-[14px] transition-all duration-500 
+                                ${route().current('beneficiary-performances.index')
+                                                                    ? 'text-orange'
+                                                                    : 'dark:text-secondary/70 text-primary/70 group-hover:text-orange'}`}>
+                                                                All Performances
+                                                            </span>
+                                                        </SidebarLink>
+                                                    </li>
+                                                )}
+
+                                                {can('beneficiary-performances.create') && (
+                                                    <li className='ml-5 relative before:absolute before:w-[1px] before:-left-[8.6px] before:top-[10px] after:-left-[0.6rem] before:h-[8px] after:absolute after:w-[4px] after:h-[4px] after:top-[22px] after:transform after:-translate-y-1/2 after:rounded-full after:bg-gray-800 after:dark:bg-orange before:bg-gray-800 before:dark:bg-orange'>
+                                                        <SidebarLink href={route('beneficiary-performances.create')} active={route().current('beneficiary-performances.create')}>
+                                                            <span className={`font-bold 2xl:text-[16px] text-[14px] transition-all duration-500 
+                                ${route().current('beneficiary-performances.create')
+                                                                    ? 'text-orange'
+                                                                    : 'dark:text-secondary/70 text-primary/70 group-hover:text-orange'}`}>
+                                                                Add Performance
+                                                            </span>
+                                                        </SidebarLink>
+                                                    </li>
+                                                )}
+                                            </ul>
+                                        )}
                                     </li>
                                 )}
+
                                 {can('institutions.index') && (
                                     <li>
                                         <div
                                             className={`flex group items-center justify-between p-2 mb-2 rounded-sm cursor-pointer 
             dark:text-secondary text-primary  
             ${['institutions.index', 'institutions.create', 'institutions.edit'].some(routeName => route().current(routeName)) || isSubNavOpen === 'institutions'
-                                                    ? 'dark:bg-secondary bg-orange/80 dark:text-primary text-secondary'
+                                                    ? ''
                                                     : ''}`}
                                             onClick={() => toggleSubNav('institutions')}
                                         >
-                                            <span className={`ml-3 flex items-center gap-1 font-bold text-lg group-hover:text-orange 
+                                            <span className={`flex items-center gap-1 font-bold 2xl:text-[16px] text-[14px] group-hover:text-orange 
                 ${['institutions.index', 'institutions.create', 'institutions.edit'].some(routeName => route().current(routeName)) || isSubNavOpen === 'institutions'
-                                                    ? 'dark:text-primary text-secondary group-hover:text-primary group-hover:dark:text-orange'
+                                                    ? 'text-orange group-hover:text-primary group-hover:dark:text-orange'
                                                     : 'dark:text-secondary text-primary'}`}>
                                                 <MdSchool /> Institutions
                                             </span>
                                             <FaChevronDown
                                                 className={`transition-all duration-300 group-hover:text-orange
                 ${['institutions.index', 'institutions.create', 'institutions.edit'].some(routeName => route().current(routeName)) || isSubNavOpen === 'institutions'
-                                                        ? 'dark:text-primary text-secondary group-hover:text-primary group-hover:dark:text-orange'
+                                                        ? 'text-orange group-hover:text-primary group-hover:dark:text-orange'
                                                         : 'dark:text-secondary text-primary'}`}
                                             />
                                         </div>
                                         {isSubNavOpen === 'institutions' && (
-                                            <ul className="sub-navigation text-sm space-y-4">
+                                            <ul className="sub-navigation text-sm ps-2">
                                                 {can('institutions.index') && (
-                                                    <li className='ml-5 relative before:absolute before:w-[2px] before:-left-2 before:top-1 after:-left-[10px] before:h-2/5 after:absolute after:w-[8px] after:h-[8px] after:top-2/3 after:transform after:-translate-y-1/2 after:rounded-full after:bg-gray-800 after:dark:bg-orange before:bg-gray-800 before:dark:bg-orange'>
+                                                    <li className='ml-5 relative before:absolute before:w-[1px] before:-left-[8.6px] before:top-[10px] after:-left-[0.6rem] before:h-[8px] after:absolute after:w-[4px] after:h-[4px] after:top-[22px] after:transform after:-translate-y-1/2 after:rounded-full after:bg-gray-800 after:dark:bg-orange before:bg-gray-800 before:dark:bg-orange'>
                                                         <SidebarLink href={route('institutions.index')} active={route().current('institutions.index')}>
-                                                            <span className={`ml-3 font-bold text-lg transition-all duration-500 
+                                                            <span className={`font-bold 2xl:text-[16px] text-[14px] transition-all duration-500 
                                 ${route().current('institutions.index')
-                                                                    ? 'dark:text-primary text-secondary'
-                                                                    : 'dark:text-secondary text-primary group-hover:text-orange'}`}>
+                                                                    ? 'text-orange'
+                                                                    : 'dark:text-secondary/70 text-primary/70 group-hover:text-orange'}`}>
                                                                 All Institutions
                                                             </span>
                                                         </SidebarLink>
                                                     </li>
                                                 )}
                                                 {can('institutions.create') && (
-                                                    <li className='ml-5 relative before:absolute before:w-[2px] before:-left-2 before:top-1 after:-left-[10px] before:h-2/5 after:absolute after:w-[8px] after:h-[8px] after:top-2/3 after:transform after:-translate-y-1/2 after:rounded-full after:bg-gray-800 after:dark:bg-orange before:bg-gray-800 before:dark:bg-orange'>
+                                                    <li className='ml-5 relative before:absolute before:w-[1px] before:-left-[8.6px] before:top-[10px] after:-left-[0.6rem] before:h-[8px] after:absolute after:w-[4px] after:h-[4px] after:top-[22px] after:transform after:-translate-y-1/2 after:rounded-full after:bg-gray-800 after:dark:bg-orange before:bg-gray-800 before:dark:bg-orange'>
                                                         <SidebarLink href={route('institutions.create')} active={route().current('institutions.create')}>
-                                                            <span className={`ml-3 font-bold text-lg transition-all duration-500 
+                                                            <span className={`font-bold 2xl:text-[16px] text-[14px] transition-all duration-500 
                                 ${route().current('institutions.create')
-                                                                    ? 'dark:text-primary text-secondary'
-                                                                    : 'dark:text-secondary text-primary group-hover:text-orange'}`}>
+                                                                    ? 'text-orange'
+                                                                    : 'dark:text-secondary/70 text-primary/70 group-hover:text-orange'}`}>
                                                                 Add Institution
                                                             </span>
                                                         </SidebarLink>
@@ -399,44 +518,44 @@ export default function Authenticated({ auth, header, children }) {
                                             className={`flex group items-center justify-between p-2 mb-2 rounded-sm cursor-pointer 
             dark:text-secondary text-primary  
             ${['programs.index', 'programs.create', 'programs.edit'].some(routeName => route().current(routeName)) || isSubNavOpen === 'programs'
-                                                    ? 'dark:bg-secondary bg-orange/80 dark:text-primary text-secondary'
+                                                    ? ''
                                                     : ''}`}
                                             onClick={() => toggleSubNav('programs')}
                                         >
-                                            <span className={`ml-3 flex items-center gap-1 font-bold text-lg group-hover:text-orange 
+                                            <span className={`flex items-center gap-1 font-bold 2xl:text-[16px] text-[14px] group-hover:text-orange 
                 ${['programs.index', 'programs.create', 'programs.edit'].some(routeName => route().current(routeName)) || isSubNavOpen === 'programs'
-                                                    ? 'dark:text-primary text-secondary group-hover:text-primary group-hover:dark:text-orange'
+                                                    ? 'text-orange group-hover:text-primary group-hover:dark:text-orange'
                                                     : 'dark:text-secondary text-primary'}`}>
                                                 <IoLayersSharp />Programs
                                             </span>
                                             <FaChevronDown
                                                 className={`transition-all duration-300 group-hover:text-orange
                 ${['programs.index', 'programs.create', 'programs.edit'].some(routeName => route().current(routeName)) || isSubNavOpen === 'programs'
-                                                        ? 'dark:text-primary text-secondary group-hover:text-primary group-hover:dark:text-orange'
+                                                        ? 'text-orange group-hover:text-primary group-hover:dark:text-orange'
                                                         : 'dark:text-secondary text-primary'}`}
                                             />
                                         </div>
                                         {isSubNavOpen === 'programs' && (
-                                            <ul className="sub-navigation text-sm space-y-4">
+                                            <ul className="sub-navigation text-sm ps-2">
                                                 {can('programs.index') && (
-                                                    <li className='ml-5 relative before:absolute before:w-[2px] before:-left-2 before:top-1 after:-left-[10px] before:h-2/5 after:absolute after:w-[8px] after:h-[8px] after:top-2/3 after:transform after:-translate-y-1/2 after:rounded-full after:bg-gray-800 after:dark:bg-orange before:bg-gray-800 before:dark:bg-orange'>
+                                                    <li className='ml-5 relative before:absolute before:w-[1px] before:-left-[8.6px] before:top-[10px] after:-left-[0.6rem] before:h-[8px] after:absolute after:w-[4px] after:h-[4px] after:top-[22px] after:transform after:-translate-y-1/2 after:rounded-full after:bg-gray-800 after:dark:bg-orange before:bg-gray-800 before:dark:bg-orange'>
                                                         <SidebarLink href={route('programs.index')} active={route().current('programs.index')}>
-                                                            <span className={`ml-3 font-bold text-lg transition-all duration-500 
+                                                            <span className={`font-bold 2xl:text-[16px] text-[14px] transition-all duration-500 
                                 ${route().current('programs.index')
-                                                                    ? 'dark:text-primary text-secondary'
-                                                                    : 'dark:text-secondary text-primary group-hover:text-orange'}`}>
+                                                                    ? 'text-orange'
+                                                                    : 'dark:text-secondary/70 text-primary/70 group-hover:text-orange'}`}>
                                                                 All Programs
                                                             </span>
                                                         </SidebarLink>
                                                     </li>
                                                 )}
                                                 {can('programs.create') && (
-                                                    <li className='ml-5 relative before:absolute before:w-[2px] before:-left-2 before:top-1 after:-left-[10px] before:h-2/5 after:absolute after:w-[8px] after:h-[8px] after:top-2/3 after:transform after:-translate-y-1/2 after:rounded-full after:bg-gray-800 after:dark:bg-orange before:bg-gray-800 before:dark:bg-orange'>
+                                                    <li className='ml-5 relative before:absolute before:w-[1px] before:-left-[8.6px] before:top-[10px] after:-left-[0.6rem] before:h-[8px] after:absolute after:w-[4px] after:h-[4px] after:top-[22px] after:transform after:-translate-y-1/2 after:rounded-full after:bg-gray-800 after:dark:bg-orange before:bg-gray-800 before:dark:bg-orange'>
                                                         <SidebarLink href={route('programs.create')} active={route().current('programs.create')}>
-                                                            <span className={`ml-3 font-bold text-lg transition-all duration-500 
+                                                            <span className={`font-bold 2xl:text-[16px] text-[14px] transition-all duration-500 
                                 ${route().current('programs.create')
-                                                                    ? 'dark:text-primary text-secondary'
-                                                                    : 'dark:text-secondary text-primary group-hover:text-orange'}`}>
+                                                                    ? 'text-orange'
+                                                                    : 'dark:text-secondary/70 text-primary/70 group-hover:text-orange'}`}>
                                                                 Add Program
                                                             </span>
                                                         </SidebarLink>
@@ -452,44 +571,44 @@ export default function Authenticated({ auth, header, children }) {
                                             className={`flex group items-center justify-between p-2 mb-2 rounded-sm cursor-pointer 
             dark:text-secondary text-primary  
             ${['roles.index', 'roles.create', 'roles.edit'].some(routeName => route().current(routeName)) || isSubNavOpen === 'roles'
-                                                    ? 'dark:bg-secondary bg-orange/80 dark:text-primary text-secondary'
+                                                    ? ''
                                                     : ''}`}
                                             onClick={() => toggleSubNav('roles')}
                                         >
-                                            <span className={`ml-3 flex items-center gap-1 font-bold text-lg group-hover:text-orange 
+                                            <span className={`flex items-center gap-1 font-bold 2xl:text-[16px] text-[14px] group-hover:text-orange 
                 ${['roles.index', 'roles.create', 'roles.edit'].some(routeName => route().current(routeName)) || isSubNavOpen === 'roles'
-                                                    ? 'dark:text-primary text-secondary group-hover:text-primary group-hover:dark:text-orange'
+                                                    ? 'text-orange group-hover:text-primary group-hover:dark:text-orange'
                                                     : 'dark:text-secondary text-primary'}`}>
                                                 <FaUserShield /> Roles
                                             </span>
                                             <FaChevronDown
                                                 className={`transition-all duration-300 group-hover:text-orange
                 ${['roles.index', 'roles.create', 'roles.edit'].some(routeName => route().current(routeName)) || isSubNavOpen === 'roles'
-                                                        ? 'dark:text-primary text-secondary group-hover:text-primary group-hover:dark:text-orange'
+                                                        ? 'text-orange group-hover:text-primary group-hover:dark:text-orange'
                                                         : 'dark:text-secondary text-primary'}`}
                                             />
                                         </div>
                                         {isSubNavOpen === 'roles' && (
-                                            <ul className="sub-navigation text-sm space-y-4">
+                                            <ul className="sub-navigation text-sm ps-2">
                                                 {can('roles.index') && (
-                                                    <li className='ml-5 relative before:absolute before:w-[2px] before:-left-2 before:top-1 after:-left-[10px] before:h-2/5 after:absolute after:w-[8px] after:h-[8px] after:top-2/3 after:transform after:-translate-y-1/2 after:rounded-full after:bg-gray-800 after:dark:bg-orange before:bg-gray-800 before:dark:bg-orange'>
+                                                    <li className='ml-5 relative before:absolute before:w-[1px] before:-left-[8.6px] before:top-[10px] after:-left-[0.6rem] before:h-[8px] after:absolute after:w-[4px] after:h-[4px] after:top-[22px] after:transform after:-translate-y-1/2 after:rounded-full after:bg-gray-800 after:dark:bg-orange before:bg-gray-800 before:dark:bg-orange'>
                                                         <SidebarLink href={route('roles.index')} active={route().current('roles.index')}>
-                                                            <span className={`ml-3 font-bold text-lg transition-all duration-500 
+                                                            <span className={`font-bold 2xl:text-[16px] text-[14px] transition-all duration-500 
                                 ${route().current('roles.index')
-                                                                    ? 'dark:text-primary text-secondary'
-                                                                    : 'dark:text-secondary text-primary group-hover:text-orange'}`}>
+                                                                    ? 'text-orange'
+                                                                    : 'dark:text-secondary/70 text-primary/70 group-hover:text-orange'}`}>
                                                                 All Roles
                                                             </span>
                                                         </SidebarLink>
                                                     </li>
                                                 )}
                                                 {can('roles.create') && (
-                                                    <li className='ml-5 relative before:absolute before:w-[2px] before:-left-2 before:top-1 after:-left-[10px] before:h-2/5 after:absolute after:w-[8px] after:h-[8px] after:top-2/3 after:transform after:-translate-y-1/2 after:rounded-full after:bg-gray-800 after:dark:bg-orange before:bg-gray-800 before:dark:bg-orange'>
+                                                    <li className='ml-5 relative before:absolute before:w-[1px] before:-left-[8.6px] before:top-[10px] after:-left-[0.6rem] before:h-[8px] after:absolute after:w-[4px] after:h-[4px] after:top-[22px] after:transform after:-translate-y-1/2 after:rounded-full after:bg-gray-800 after:dark:bg-orange before:bg-gray-800 before:dark:bg-orange'>
                                                         <SidebarLink href={route('roles.create')} active={route().current('roles.create')}>
-                                                            <span className={`ml-3 font-bold text-lg transition-all duration-500 
+                                                            <span className={`font-bold 2xl:text-[16px] text-[14px] transition-all duration-500 
                                 ${route().current('roles.create')
-                                                                    ? 'dark:text-primary text-secondary'
-                                                                    : 'dark:text-secondary text-primary group-hover:text-orange'}`}>
+                                                                    ? 'text-orange'
+                                                                    : 'dark:text-secondary/70 text-primary/70 group-hover:text-orange'}`}>
                                                                 Add Role
                                                             </span>
                                                         </SidebarLink>
@@ -506,44 +625,44 @@ export default function Authenticated({ auth, header, children }) {
                                             className={`flex group items-center justify-between p-2 mb-2 rounded-sm cursor-pointer 
             dark:text-secondary text-primary  
             ${['users.index', 'users.create', 'users.edit'].some(routeName => route().current(routeName)) || isSubNavOpen === 'users'
-                                                    ? 'dark:bg-secondary bg-orange/80 dark:text-primary text-secondary'
+                                                    ? ''
                                                     : ''}`}
                                             onClick={() => toggleSubNav('users')}
                                         >
-                                            <span className={`ml-3 flex items-center gap-1 font-bold text-lg group-hover:text-orange 
+                                            <span className={`flex items-center gap-1 font-bold 2xl:text-[16px] text-[14px] group-hover:text-orange 
                 ${['users.index', 'users.create', 'users.edit'].some(routeName => route().current(routeName)) || isSubNavOpen === 'users'
-                                                    ? 'dark:text-primary text-secondary group-hover:text-primary group-hover:dark:text-orange'
+                                                    ? 'text-orange group-hover:text-primary group-hover:dark:text-orange'
                                                     : 'dark:text-secondary text-primary'}`}>
                                                 <FaUser /> Users
                                             </span>
                                             <FaChevronDown
                                                 className={`transition-all duration-300 group-hover:text-orange
                 ${['users.index', 'users.create', 'users.edit'].some(routeName => route().current(routeName)) || isSubNavOpen === 'users'
-                                                        ? 'dark:text-primary text-secondary group-hover:text-primary group-hover:dark:text-orange'
+                                                        ? 'text-orange group-hover:text-primary group-hover:dark:text-orange'
                                                         : 'dark:text-secondary text-primary'}`}
                                             />
                                         </div>
                                         {isSubNavOpen === 'users' && (
-                                            <ul className="sub-navigation text-sm space-y-4">
+                                            <ul className="sub-navigation text-sm ps-2">
                                                 {can('users.index') && (
-                                                    <li className='ml-5 relative before:absolute before:w-[2px] before:-left-2 before:top-1 after:-left-[10px] before:h-2/5 after:absolute after:w-[8px] after:h-[8px] after:top-2/3 after:transform after:-translate-y-1/2 after:rounded-full after:bg-gray-800 after:dark:bg-orange before:bg-gray-800 before:dark:bg-orange'>
+                                                    <li className='ml-5 relative before:absolute before:w-[1px] before:-left-[8.6px] before:top-[10px] after:-left-[0.6rem] before:h-[8px] after:absolute after:w-[4px] after:h-[4px] after:top-[22px] after:transform after:-translate-y-1/2 after:rounded-full after:bg-gray-800 after:dark:bg-orange before:bg-gray-800 before:dark:bg-orange'>
                                                         <SidebarLink href={route('users.index')} active={route().current('users.index')}>
-                                                            <span className={`ml-3 font-bold text-lg transition-all duration-500 
+                                                            <span className={`font-bold 2xl:text-[16px] text-[14px] transition-all duration-500 
                                 ${route().current('users.index')
-                                                                    ? 'dark:text-primary text-secondary'
-                                                                    : 'dark:text-secondary text-primary group-hover:text-orange'}`}>
+                                                                    ? 'text-orange'
+                                                                    : 'dark:text-secondary/70 text-primary/70 group-hover:text-orange'}`}>
                                                                 All Users
                                                             </span>
                                                         </SidebarLink>
                                                     </li>
                                                 )}
                                                 {can('users.create') && (
-                                                    <li className='ml-5 relative before:absolute before:w-[2px] before:-left-2 before:top-1 after:-left-[10px] before:h-2/5 after:absolute after:w-[8px] after:h-[8px] after:top-2/3 after:transform after:-translate-y-1/2 after:rounded-full after:bg-gray-800 after:dark:bg-orange before:bg-gray-800 before:dark:bg-orange'>
+                                                    <li className='ml-5 relative before:absolute before:w-[1px] before:-left-[8.6px] before:top-[10px] after:-left-[0.6rem] before:h-[8px] after:absolute after:w-[4px] after:h-[4px] after:top-[22px] after:transform after:-translate-y-1/2 after:rounded-full after:bg-gray-800 after:dark:bg-orange before:bg-gray-800 before:dark:bg-orange'>
                                                         <SidebarLink href={route('users.create')} active={route().current('users.create')}>
-                                                            <span className={`ml-3 font-bold text-lg transition-all duration-500 
+                                                            <span className={`font-bold 2xl:text-[16px] text-[14px] transition-all duration-500 
                                 ${route().current('users.create')
-                                                                    ? 'dark:text-primary text-secondary'
-                                                                    : 'dark:text-secondary text-primary group-hover:text-orange'}`}>
+                                                                    ? 'text-orange'
+                                                                    : 'dark:text-secondary/70 text-primary/70 group-hover:text-orange'}`}>
                                                                 Add User
                                                             </span>
                                                         </SidebarLink>
@@ -559,38 +678,38 @@ export default function Authenticated({ auth, header, children }) {
                                         className={`flex group items-center justify-between p-2 mb-2 rounded-sm cursor-pointer 
             dark:text-secondary text-primary 
             ${['profile.edit'].some(profileName => route().current(profileName)) || isSubNavOpen === 'profile'
-                                                ? 'dark:bg-secondary bg-orange/80 dark:text-primary text-secondary'
+                                                ? ''
                                                 : ''}`}
                                         onClick={() => toggleSubNav('profile')}
                                     >
-                                        <span className={`ml-3 flex items-center gap-1 font-bold text-lg group-hover:text-orange 
+                                        <span className={`flex items-center gap-1 font-bold 2xl:text-[16px] text-[14px] group-hover:text-orange 
                 ${['profile.edit'].some(profileName => route().current(profileName)) || isSubNavOpen === 'profile'
-                                                ? 'dark:text-primary text-secondary group-hover:text-primary group-hover:dark:text-orange'
+                                                ? 'text-orange group-hover:text-primary group-hover:dark:text-orange'
                                                 : 'dark:text-secondary text-primary'}`}>
                                             <IoSettings /> Setting
                                         </span>
                                         <FaChevronDown
                                             className={`transition-all duration-300 group-hover:text-orange
                 ${['profile.edit'].some(profileName => route().current(profileName)) || isSubNavOpen === 'profile'
-                                                    ? 'dark:text-primary text-secondary group-hover:text-primary group-hover:dark:text-orange'
+                                                    ? 'text-orange group-hover:text-primary group-hover:dark:text-orange'
                                                     : 'dark:text-secondary text-primary'}`}
                                         />
                                     </div>
                                     {isSubNavOpen === 'profile' && (
-                                        <ul className="sub-navigation text-sm space-y-4">
-                                            <li className='ml-5 relative before:absolute before:w-[2px] before:-left-2 before:top-1 after:-left-[10px] before:h-2/5 after:absolute after:w-[8px] after:h-[8px] after:top-2/3 after:transform after:-translate-y-1/2 after:rounded-full after:bg-gray-800 after:dark:bg-orange before:bg-gray-800 before:dark:bg-orange'>
+                                        <ul className="sub-navigation text-sm ps-2">
+                                            <li className='ml-5 relative before:absolute before:w-[1px] before:-left-[8.6px] before:top-[10px] after:-left-[0.6rem] before:h-[8px] after:absolute after:w-[4px] after:h-[4px] after:top-[22px] after:transform after:-translate-y-1/2 after:rounded-full after:bg-gray-800 after:dark:bg-orange before:bg-gray-800 before:dark:bg-orange'>
                                                 <SidebarLink href={route('profile.edit')} active={route().current('profile.edit')}>
-                                                    <span className={`ml-3 font-bold text-lg transition-all duration-500 
+                                                    <span className={`font-bold 2xl:text-[16px] text-[14px] transition-all duration-500 
                                 ${route().current('profile.edit')
-                                                            ? 'dark:text-primary text-secondary'
+                                                            ? 'text-orange'
                                                             : 'dark:text-secondary text-primary group-hover:text-orange'}`}>
                                                         Profile
                                                     </span>
                                                 </SidebarLink>
                                             </li>
-                                            <li className='ml-5 relative before:absolute before:w-[2px] before:-left-2 before:top-1 after:-left-[10px] before:h-2/5 after:absolute after:w-[8px] after:h-[8px] after:top-2/3 after:transform after:-translate-y-1/2 after:rounded-full after:bg-gray-800 after:dark:bg-orange before:bg-gray-800 before:dark:bg-orange'>
+                                            <li className='ml-5 relative before:absolute before:w-[1px] before:-left-[8.6px] before:top-[10px] after:-left-[0.6rem] before:h-[8px] after:absolute after:w-[4px] after:h-[4px] after:top-[22px] after:transform after:-translate-y-1/2 after:rounded-full after:bg-gray-800 after:dark:bg-orange before:bg-gray-800 before:dark:bg-orange'>
                                                 <SidebarLink href={route('logout')} method="post">
-                                                    <span className={`ml-3 font-bold text-lg transition-all duration-500`}>
+                                                    <span className={`font-bold 2xl:text-[16px] text-[14px] transition-all duration-500 dark:text-white text-gray-800`}>
                                                         Log Out
                                                     </span>
                                                 </SidebarLink>
@@ -601,7 +720,7 @@ export default function Authenticated({ auth, header, children }) {
                             </ul>
                         </div>
                     )}
-                    <div className={`${isDrawerOpen ? 'xl:col-span-10 lg:col-span-9 col-span-12' : 'col-span-12'} text-gray-800 transition-all duration-500`}>
+                    <div className={`${isDrawerOpen ? 'xl:w-4/5 lg:w-3/4 w-full' : 'w-full'} text-gray-800 transition-all duration-500`}>
                         {children}
                     </div>
                 </div>

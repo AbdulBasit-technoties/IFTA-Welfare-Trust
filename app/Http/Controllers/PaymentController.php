@@ -43,14 +43,40 @@ class PaymentController extends Controller
         ]);
     }
 
+    public function PaymentRequest(Request $request)
+    {
+        $payments = Payment::with(['donor', 'beneficiary', 'program'])
+            ->where('status', 'Request')->filterByRole();
+        if ($request->has('beneficiaries') && !empty($request->beneficiaries)) {
+            $payments->whereIn('bid', $request->beneficiaries);
+        }
+        $PaymentStatus = [
+            ["label" => "Waiting", "value" => "Waiting"],
+            ["label" => "Request", "value" => "Request"],
+            ["label" => "Approved", "value" => "Approved"],
+            ["label" => "Rejected", "value" => "Rejected"],
+            ["label" => "Partially Paid", "value" => "Partially Paid"],
+            ["label" => "Paid", "value" => "Paid"],
+        ];
 
+        $beneficiaries = User::role('Beneficiary')->get()->map(fn($beneficiary) => [
+            'label' => $beneficiary->name,
+            'value' => (string) $beneficiary->id, // Ensure it's a string
+        ])->toArray();
+        return Inertia::render('Payment/PaymentRequest', [
+            'payments' => $payments->paginate(10),
+            'paymentStatus' => $PaymentStatus,
+            'beneficiaries' => $beneficiaries,
+        ]);
+    }
 
 
     public function create(Request $request)
     {
-        $bid = $request->input('bid');
-        $pid = $request->input('pid');
-        $beneficiaryRecord = null; // Default null set kar diya
+        $bid = $request->input('bid') ?? null;
+        $pid = $request->input('pid') ?? null;
+        $did = $request->input('did') ?? null;
+        $beneficiaryRecord = null;
 
         if ($pid && $bid) {
             $beneficiaryRecord = Beneficiary::where('uid', $bid)
@@ -101,25 +127,27 @@ class PaymentController extends Controller
             ["label" => "Donor Deposit", "value" => "DepositDonor"],
         ];
 
-        return Inertia::render('Payment/Create', compact(
-            'donors',
-            'beneficiaries',
-            'PaymentStatus',
-            'beneficiaryProgram',
-            'OptionPayments',
-            'beneficiaryRecord'
-        ));
+        return Inertia::render('Payment/Create', [
+            'donors' => $donors,
+            'beneficiaries' => $beneficiaries,
+            'PaymentStatus' => $PaymentStatus,
+            'beneficiaryProgram' => $beneficiaryProgram,
+            'OptionPayments' => $OptionPayments,
+            'beneficiaryRecord' => $beneficiaryRecord,
+            'bid' => $bid,
+            'pid' => $pid,
+            'did' => $did,
+        ]);
     }
 
     public function store(StorePaymentRequest $request)
     {
         $data = $request->all();
-
         // File upload handling
         if ($request->hasFile('payment_slip')) {
             $file = $request->file('payment_slip');
             $filePath = $file->store('payments', 'public');
-            $data['payment_slip'] = 'storage/' . $filePath;
+            $data['payment_slip'] = $filePath;
         }
 
         if ($data['payment_option'] === 'DepositDonor') {
@@ -159,7 +187,7 @@ class PaymentController extends Controller
                 $newBalance = $donorBalance - $data['amount_paid'];
 
                 DB::table('donor_payments')
-                    ->where('id', $lastPayment->id)
+                    ->where('did', $data['did'])
                     ->update(['total_paid' => $newBalance]);
             }
 
@@ -174,6 +202,13 @@ class PaymentController extends Controller
             'message' => 'Payment processed successfully!'
         ]);
     }
+    public function DonorDeposite()
+    {
+        $donorDeposite = DB::table('donor_payments')
+            ->join('users', 'donor_payments.did', '=', 'users.id')->select('donor_payments.*', 'users.name as donor_name')->paginate(10);
+        return Inertia::render('Payment/DonorDeposite', compact('donorDeposite'));
+    }
+
     public function edit(Payment $payment)
     {
         $beneficiaryProgram = Beneficiary::where('uid', $payment->bid)

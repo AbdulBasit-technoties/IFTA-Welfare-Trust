@@ -147,11 +147,11 @@ export default function Index({ auth, beneficiaries, TypeOptions, beneficiaryDat
     const [isBeneficiarySelected, setIsBeneficiarySelected] = useState(false);
     const [selectedPid, setSelectedPid] = useState("");
     const handleProgramChange = (selectedValue) => {
-        setSelectedPid(selectedValue); // ✅ Selected PID Ko Store Karein
+        setSelectedPid(selectedValue);
         setData((prevData) => ({
             ...prevData,
             pid: selectedValue,
-            uid: "",  // Beneficiary reset karna jab program change ho
+            uid: "", 
             beneficiary_name: ""
         }));
 
@@ -609,7 +609,7 @@ export default function Index({ auth, beneficiaries, TypeOptions, beneficiaryDat
                                     </>
                                 )}
                                 <div className="flex items-center col-span-12 gap-2 sm:gap-4">
-                                    {isBeneficiarySelected && (
+                                    {isBeneficiarySelected && data.beneficiary_name && data.guardian_name && data.beneficiary_cnic && data.guardian_cnic && data.email && data.beneficiary_contact_no && data.guardian_contact_no && data.occupation && data.date_of_birth && data.sign && data.household_income && data.family_members && data.marital_status && data.gender && data.description && data.disability && data.address && (
 
                                         <button
                                             type="button"
@@ -748,9 +748,6 @@ export default function Index({ auth, beneficiaries, TypeOptions, beneficiaryDat
                                         )}
                                     </>
                                 )}
-
-
-
                                 {((programSlug === 'schools' || programSlug === 'higher-educations') && showAdditionalInfo &&
 
                                     <div className={`${programSlug === 'higher-educations' ? 'xl:col-span-3 sm:col-span-6 col-span-12' : 'xl:col-span-3 sm:col-span-6 col-span-12'}`}>
@@ -907,8 +904,6 @@ export default function Index({ auth, beneficiaries, TypeOptions, beneficiaryDat
                                         </div>
                                     </>
                                 )}
-
-
                                 {programSlug === 'patients' && (
                                     <div className="xl:col-span-6 col-span-12">
                                         <InputLabel htmlFor="total_fee" value="Cause" />
@@ -918,20 +913,27 @@ export default function Index({ auth, beneficiaries, TypeOptions, beneficiaryDat
                                             value={data.total_fee || ''}
                                             onChange={(e) => setData('total_fee', e.target.value)}
                                             autoComplete="total_fee"
-                                            type="text"
+                                            type="number"
                                         />
                                         <InputError className="mt-2" message={errors.total_fee} />
                                     </div>
                                 )}
-
                                 <div className="flex items-center col-span-12 gap-2 sm:gap-4">
-                                    <button
-                                        type="button"
-                                        className="inline-flex items-center px-4 py-2 bg-primary border border-transparent rounded-2xl text-xs text-white capitalize tracking-widest hover:border-primary hover:bg-transparent hover:text-primary transition-all duration-500"
-                                        onClick={() => setStep(3)}
-                                    >
-                                        Next
-                                    </button>
+                                    {(programSlug === 'schools' && data.education_type && data.institute_id && data.class && data.total_fee && data.approved_amount) ||
+                                        (programSlug === 'higher-educations' && data.education_type && data.institute_id && data.semester && data.degree_title && data.total_fee && data.approved_amount) ||
+                                        (programSlug === 'marriages' && data.spouse_education && data.spouse_age && data.no_of_guest_invited && data.place_of_marriage && data.date_of_marriage) ||
+                                        (programSlug === 'patients' && data.hospital_name && data.dr_name && data.diseases_injury && data.last_checkup_date && data.total_fee)
+                                        ? (
+                                            <button
+                                                type="button"
+                                                className="inline-flex items-center px-4 py-2 bg-primary border border-transparent rounded-2xl text-xs text-white capitalize tracking-widest hover:border-primary hover:bg-transparent hover:text-primary transition-all duration-500"
+                                                onClick={() => setStep(3)}
+                                            >
+                                                Next
+                                            </button>
+                                        )
+                                        : null}
+
                                     {step > 1 && (
                                         <button
                                             type="button"
@@ -1000,13 +1002,15 @@ export default function Index({ auth, beneficiaries, TypeOptions, beneficiaryDat
                                     <InputError className="mt-2" message={errors.reference_relation} />
                                 </div>
                                 <div className="flex items-center col-span-12 gap-2 sm:gap-4">
-                                    <button
-                                        type="button"
-                                        className="inline-flex items-center px-4 py-2 bg-primary border border-transparent rounded-2xl text-xs text-white capitalize tracking-widest hover:border-primary hover:bg-transparent hover:text-primary transition-all duration-500"
-                                        onClick={() => setStep(programSlug === 'rations' ? 3 : 4)}
-                                    >
-                                        Next
-                                    </button>
+                                    {data.reference_name && data.reference_contact && data.reference_relation &&
+                                        <button
+                                            type="button"
+                                            className="inline-flex items-center px-4 py-2 bg-primary border border-transparent rounded-2xl text-xs text-white capitalize tracking-widest hover:border-primary hover:bg-transparent hover:text-primary transition-all duration-500"
+                                            onClick={() => setStep(programSlug === 'rations' ? 3 : 4)}
+                                        >
+                                            Next
+                                        </button>
+                                    }
 
                                     <button
                                         type="button"
@@ -1382,7 +1386,9 @@ export default function Index({ auth, beneficiaries, TypeOptions, beneficiaryDat
                                     </div>
                                 )}
                                 <div className="flex items-center col-span-12 gap-2 sm:gap-4">
-                                    <PrimaryButton>Add Beneficiary</PrimaryButton>
+                                    {data.approver_sign && data.did && data.approval_date &&
+                                        <PrimaryButton>Add Beneficiary</PrimaryButton>
+                                    }
                                     <button
                                         type="button"
                                         className="inline-flex items-center px-4 py-2 bg-primary border border-transparent rounded-2xl text-xs text-white capitalize tracking-widest hover:border-primary hover:bg-transparent hover:text-primary transition-all duration-500"
